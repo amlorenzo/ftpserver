@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: irgftpserver
+
+sftp:
+  server:
+    hostkeyalgorithm: RSA
+    port: 2221
+    keyPath: hostkey.ser
+    # Max Packet Size do not change unless you know what you're doing.
+    maxWriteDataPacketLength: 32768
+    users:
+      - username: alorenzo
+        password: password1
+        directory: /home/alorenzo/ftp
+      - username: jamey
+        password: password2
+        directory: /home/alorenzo/ftp1
+      - username: sonja
+        password: password3
+        directory: /home/alorenzo/ftp3
