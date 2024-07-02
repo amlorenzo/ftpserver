@@ -19,7 +19,7 @@ public class CustomSFTPSessionListener implements SessionListener {
 
     @Override
     public void sessionCreated(Session session) {
-        log.info("Session created: {} by User: {}", session, session.getUsername());
+        log.info("Session established: {}", session);
     }
 
     @Override
