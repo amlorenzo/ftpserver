@@ -9,7 +9,10 @@ sftp:
     keyPath: hostkey.ser
     # Max Packet Size do not change unless you know what you're doing.
     maxWriteDataPacketLength: 32768
+    maxLoginAttemptThreshold: 3
+    delayBetweenLoginAttempts: 2000
     users:
       - username: testUser
         password: password
         directory: /home/testUser/ftp
+

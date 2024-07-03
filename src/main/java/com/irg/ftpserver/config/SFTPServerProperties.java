@@ -17,5 +17,6 @@ public class SFTPServerProperties {
     private String hostKeyAlgorithm;
     private List<User> users;
     private int maxWriteDataPacketLength;
-
+    private int maxLoginAttemptThreshold;
+    private long delayBetweenLoginAttempts;
 }

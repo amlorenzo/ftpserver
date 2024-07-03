@@ -1,6 +1,5 @@
 package com.irg.ftpserver.events;
 
-
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.sftp.server.AbstractSftpEventListenerAdapter;
 import org.apache.sshd.sftp.server.FileHandle;
@@ -9,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;

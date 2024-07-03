@@ -1,5 +1,6 @@
 package com.irg.ftpserver.events;
 
+import com.irg.ftpserver.service.SFTPLoginService;
 import org.apache.sshd.common.kex.KexProposalOption;
 import org.apache.sshd.common.session.Session;
 import org.apache.sshd.common.session.SessionListener;
@@ -7,6 +8,10 @@ import org.apache.sshd.server.session.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.net.InetSocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /************************************************************
  * CustomSessionListener
@@ -16,10 +21,17 @@ import org.springframework.stereotype.Component;
 public class CustomSFTPSessionListener implements SessionListener {
 
     private static final Logger log = LoggerFactory.getLogger(CustomSFTPSessionListener.class);
+    private final SFTPLoginService sftpLoginService;
+    private final Map<Session, Boolean> sessionClosedFlags = new ConcurrentHashMap<>();
 
     @Override
     public void sessionCreated(Session session) {
+        String host = ((InetSocketAddress)session.getIoSession().getRemoteAddress()).getAddress().getHostAddress();
         log.info("Session established: {}", session);
+        if (sftpLoginService.isBlocked(host)){
+            log.info("Blocked Host: {} tried to connect", host);
+            session.close(false);
+        }
     }
 
     @Override
@@ -41,7 +53,22 @@ public class CustomSFTPSessionListener implements SessionListener {
 
     @Override
     public void sessionClosed(Session session) {
-        log.info("Session closed: {} by User: {}, from: {}", session, session.getUsername()
-                , session.getIoSession().getRemoteAddress());
+        // Avoid duplicate session closed events
+        if (sessionClosedFlags.putIfAbsent(session, true) == null) {
+            log.debug("Entering sessionClosed method for session: {}", session);
+
+            String username = session.getUsername();
+            if (username == null) {
+                log.info("Session closed: {} To Host: {}", session, session.getIoSession().getRemoteAddress());
+            } else {
+                log.info("Session closed: {} by User: {}, To Host: {}", session, session.getUsername()
+                        , session.getIoSession().getRemoteAddress());
+            }
+            log.debug("Exiting sessionClosed method for session: {}", session);
+        }
+    }
+
+    public CustomSFTPSessionListener(SFTPLoginService sftpLoginService) {
+        this.sftpLoginService = sftpLoginService;
     }
 }

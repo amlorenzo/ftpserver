@@ -6,14 +6,13 @@ import org.apache.sshd.server.SshServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 
 @Service
 /***
  * SFTPServerService class is responsible for starting the SFTP server.
  * Configuration of the server is done in the SFTPServerConfig class.
- * ***/
+ */
 public class SFTPServerService {
 
     private static final Logger logger = LoggerFactory.getLogger(SFTPServerService.class);
