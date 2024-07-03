@@ -3,6 +3,7 @@ package com.irg.ftpserver.service;
 import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.events.HostBlockedEvent;
 import com.irg.ftpserver.model.User;
+import lombok.NonNull;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
@@ -42,7 +43,7 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
     }
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
+    public void setApplicationEventPublisher(@NonNull ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
 

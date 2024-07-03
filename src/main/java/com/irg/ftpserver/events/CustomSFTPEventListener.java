@@ -26,7 +26,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
 
 
     @Override
-    public void open(ServerSession session, String remoteHandle, Handle localHandle) throws IOException {
+    public void open(ServerSession session, String remoteHandle, Handle localHandle) {
         Path path = localHandle.getFile();
         logger.info(String.format("User: %s from: %s, accessed file or directory: %s",
                 session.getUsername(), session.getIoSession().getRemoteAddress(), path));
@@ -34,7 +34,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
 
     @Override
     public void writing(ServerSession session, String remoteHandle, FileHandle localHandle, long offset, byte[] data
-            , int dataOffset, int dataLen) throws IOException {
+            , int dataOffset, int dataLen) {
         Path path = localHandle.getFile();
         String filePath = getKey(session, path);
         fileWriteSizes.computeIfAbsent(filePath, k -> new AtomicLong(0)).addAndGet(dataLen);
@@ -43,7 +43,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
 
     @Override
     public void read(ServerSession session, String remoteHandle, FileHandle localHandle, long offset, byte[] data
-            , int dataOffset, int dataLen, int readLen, Throwable thrown) throws IOException {
+            , int dataOffset, int dataLen, int readLen, Throwable thrown) {
         Path path = localHandle.getFile();
         String filePath = getKey(session, path);
         fileReadSizes.computeIfAbsent(filePath, k -> new AtomicLong(0)).addAndGet(readLen);
@@ -96,7 +96,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
     }
 
     @Override
-    public void created(ServerSession session, Path path, Map<String, ?> attrs, Throwable thrown) throws IOException {
+    public void created(ServerSession session, Path path, Map<String, ?> attrs, Throwable thrown) {
         if (thrown == null) {
             logger.info("User: {}, from: {}, successfully created directory: {}", session.getUsername()
                     , session.getIoSession().getRemoteAddress(), path);
