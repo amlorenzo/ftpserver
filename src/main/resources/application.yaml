@@ -14,5 +14,5 @@ sftp:
     SFTPUsers:
       - username: testUser
         password: password
-        directory: /home/testUser/ftp
+        directory: /home/alorenzo/ftp
 
