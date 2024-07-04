@@ -28,7 +28,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
     @Override
     public void open(ServerSession session, String remoteHandle, Handle localHandle) {
         Path path = localHandle.getFile();
-        logger.info(String.format("User: %s from: %s, accessed file or directory: %s",
+        logger.info(String.format("SFTPUser: %s from: %s, accessed file or directory: %s",
                 session.getUsername(), session.getIoSession().getRemoteAddress(), path));
     }
 
@@ -61,15 +61,15 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
         long fileSize = Files.size(path);
 
         if (totalWriteSize != null && totalWriteSize.get() > 0) {
-            logger.info("User: {}, from: {}, wrote to file: {}, total data length: {}, file size: {}"
+            logger.info("SFTPUser: {}, from: {}, wrote to file: {}, total data length: {}, file size: {}"
                     , session.getUsername(),session.getIoSession().getRemoteAddress(),path, totalWriteSize.get()
                     , fileSize);
         } else if (totalReadSize != null && totalReadSize.get() > 0) {
-            logger.info("User: {}, from {}, read from file: {}, total data length: {}, file size: {}"
+            logger.info("SFTPUser: {}, from {}, read from file: {}, total data length: {}, file size: {}"
                     , session.getUsername(), session.getIoSession().getRemoteAddress(), path, totalReadSize.get()
                     , fileSize);
         } else if (accessed != null && accessed) {
-            logger.info("User: {}, from {}, accessed file: {} but did not read or write any data, file size: {}"
+            logger.info("SFTPUser: {}, from {}, accessed file: {} but did not read or write any data, file size: {}"
                     , session.getIoSession().getRemoteAddress(), session.getUsername(), path, fileSize);
         }
     }
@@ -77,7 +77,7 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
     @Override
     public void removing(ServerSession session, Path path, boolean isDirectory) throws IOException {
         long fileSize = Files.size(path);
-        logger.info("User: {}, from: {}, is deleting {}: {}, file size: {}", session.getUsername()
+        logger.info("SFTPUser: {}, from: {}, is deleting {}: {}, file size: {}", session.getUsername()
                 , session.getIoSession().getRemoteAddress(), isDirectory ? "directory" : "file", path, fileSize);
 
     }
@@ -86,10 +86,10 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
     public void removed(ServerSession session, Path path, boolean isDirectory, Throwable thrown) throws IOException {
         long fileSize = Files.size(path);
         if (thrown == null) {
-            logger.info("User: {}, from: {}, successfully deleted {}: {}, file size: {}", session.getUsername()
+            logger.info("SFTPUser: {}, from: {}, successfully deleted {}: {}, file size: {}", session.getUsername()
                     , session.getIoSession().getRemoteAddress(), isDirectory ? "directory" : "file", path, fileSize);
         } else {
-            logger.error("User: {}, from: {}, failed to delete {}: {} due to {}, file size: {}", session.getUsername()
+            logger.error("SFTPUser: {}, from: {}, failed to delete {}: {} due to {}, file size: {}", session.getUsername()
                     , session.getIoSession().getRemoteAddress(), isDirectory ? "directory" : "file", path
                     , thrown.getMessage(), fileSize, thrown);
         }
@@ -98,10 +98,10 @@ public class CustomSFTPEventListener extends AbstractSftpEventListenerAdapter {
     @Override
     public void created(ServerSession session, Path path, Map<String, ?> attrs, Throwable thrown) {
         if (thrown == null) {
-            logger.info("User: {}, from: {}, successfully created directory: {}", session.getUsername()
+            logger.info("SFTPUser: {}, from: {}, successfully created directory: {}", session.getUsername()
                     , session.getIoSession().getRemoteAddress(), path);
         } else {
-            logger.error("User: {}, from: {}, failed to create directory: {} due to {}", session.getUsername()
+            logger.error("SFTPUser: {}, from: {}, failed to create directory: {} due to {}", session.getUsername()
                     , session.getIoSession().getRemoteAddress(), path, thrown.getMessage(), thrown);
         }
     }

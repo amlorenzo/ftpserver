@@ -63,7 +63,7 @@ class CustomSFTPSessionListenerTest {
         assertEquals(1, logEvents.size());
         ILoggingEvent logEvent = logEvents.get(0);
         assertEquals("Session created: Mock for Session, hashCode: " + session.hashCode()
-                + " by User: testUser", logEvent.getFormattedMessage());
+                + " by SFTPUser: testUser", logEvent.getFormattedMessage());
         assertEquals("testUser", session.getUsername());
     }
 
@@ -76,7 +76,7 @@ class CustomSFTPSessionListenerTest {
         assertEquals(1, logEvents.size());
         ILoggingEvent logEvent = logEvents.get(0);
         assertEquals("Session Authenticated: Mock for ServerSession, hashCode: " + serverSession.hashCode() +
-                        ", by User: testUser, from IP: /127.0.0.1:2221, with Client Version: SSH-2.0-OpenSSH_7.4, " +
+                        ", by SFTPUser: testUser, from IP: /127.0.0.1:2221, with Client Version: SSH-2.0-OpenSSH_7.4, " +
                         "with Cipher: aes128-ctr, MAC: hmac-sha2-256, Algo: diffie-hellman-group14-sha1",
                 logEvent.getFormattedMessage());
         assertEquals("testUser", serverSession.getUsername());
@@ -96,7 +96,7 @@ class CustomSFTPSessionListenerTest {
         assertEquals(1, logEvents.size());
         ILoggingEvent logEvent = logEvents.get(0);
         assertEquals("Session closed: Mock for Session, hashCode: " + session.hashCode() +
-                " by User: testUser, from: /127.0.0.1:2221", logEvent.getFormattedMessage());
+                " by SFTPUser: testUser, from: /127.0.0.1:2221", logEvent.getFormattedMessage());
         assertEquals("testUser", session.getUsername());
         assertEquals("/127.0.0.1:2221", session.getIoSession().getRemoteAddress().toString());
     }

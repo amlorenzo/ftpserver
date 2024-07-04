@@ -1,7 +1,7 @@
 package com.irg.ftpserver.service;
 
 import com.irg.ftpserver.config.SFTPServerProperties;
-import com.irg.ftpserver.model.User;
+import com.irg.ftpserver.model.SFTPUser;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +18,8 @@ public class SFTPFileSystemService {
      */
     public VirtualFileSystemFactory createVirtualFileSystemFactory() {
         VirtualFileSystemFactory virtualFileSystemFactory = new VirtualFileSystemFactory();
-        for(User user : sftpServerProperties.getUsers()) {
-            virtualFileSystemFactory.setUserHomeDir(user.getUsername(), Paths.get(user.getDirectory()));
+        for(SFTPUser SFTPUser : sftpServerProperties.getSFTPUsers()) {
+            virtualFileSystemFactory.setUserHomeDir(sftpUser.getUsername(), Paths.get(sftpUser.getDirectory()));
         }
         return virtualFileSystemFactory;
     }

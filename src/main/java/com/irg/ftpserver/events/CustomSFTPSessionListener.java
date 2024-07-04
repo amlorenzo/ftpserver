@@ -44,7 +44,7 @@ public class CustomSFTPSessionListener implements SessionListener {
                 String clientIp = serverSession.getIoSession().getRemoteAddress().toString();
                 String clientVersion = serverSession.getClientVersion();
 
-                log.info("Session Authenticated: {}, by User: {}, from IP: {}, with Client Version: {}, with Cipher: {}" +
+                log.info("Session Authenticated: {}, by SFTPUser: {}, from IP: {}, with Client Version: {}, with Cipher: {}" +
                                 ", MAC: {}, Algo: {}",
                         session, session.getUsername(), clientIp,clientVersion, cipher, mac, algo);
             }
@@ -61,7 +61,7 @@ public class CustomSFTPSessionListener implements SessionListener {
             if (username == null) {
                 log.info("Session closed: {} To Host: {}", session, session.getIoSession().getRemoteAddress());
             } else {
-                log.info("Session closed: {} by User: {}, To Host: {}", session, session.getUsername()
+                log.info("Session closed: {} by SFTPUser: {}, To Host: {}", session, session.getUsername()
                         , session.getIoSession().getRemoteAddress());
             }
             log.debug("Exiting sessionClosed method for session: {}", session);

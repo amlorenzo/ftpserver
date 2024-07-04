@@ -1,6 +1,6 @@
 package com.irg.ftpserver.config;
 
-import com.irg.ftpserver.model.User;
+import com.irg.ftpserver.model.SFTPUser;
 import org.apache.sshd.server.SshServer;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,8 @@ public class TestConfig {
         properties.setKeyPath("/path/to/key");
         properties.setHostKeyAlgorithm("RSA");
         properties.setMaxWriteDataPacketLength(32768);
-        User testUser = new User("testUser", "password", "/home/testUser");
-        properties.setUsers(List.of(testUser));
+        SFTPUser testSFTPUser = new SFTPUser("testSFTPUser", "password", "/home/testSFTPUser");
+        properties.setSFTPUsers(List.of(testSFTPUser));
         return properties;
     }
 }

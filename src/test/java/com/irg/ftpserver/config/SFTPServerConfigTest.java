@@ -76,7 +76,7 @@ public class SFTPServerConfigTest {
         Assertions.assertNotNull(passwordAuthenticator);
         // Check if the user map is correctly populated
         Assertions.assertTrue(
-                sftpServerProperties.getUsers().stream()
+                sftpServerProperties.getSFTPUsers().stream()
                         .anyMatch(user -> "testUser".equals(user.getUsername()) && "password".equals(user.getPassword()))
         );
         boolean isAuthenticated = passwordAuthenticator.authenticate("testUser", "password", null);

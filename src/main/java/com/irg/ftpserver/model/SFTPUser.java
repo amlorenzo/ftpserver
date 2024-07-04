@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data  // Generates getters, setters, equals, hashCode, and toString
 @NoArgsConstructor  // Generates default constructor
 @AllArgsConstructor  // Generates constructor with all arguments
-public class User {
+public class SFTPUser {
     private String username;
     private String password;
     private String directory;

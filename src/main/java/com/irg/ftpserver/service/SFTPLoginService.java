@@ -2,7 +2,7 @@ package com.irg.ftpserver.service;
 
 import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.events.HostBlockedEvent;
-import com.irg.ftpserver.model.User;
+import com.irg.ftpserver.model.SFTPUser;
 import lombok.NonNull;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
@@ -30,15 +30,15 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
     private ApplicationEventPublisher eventPublisher;
 
     /***
-     * User authentication should never be handled in clear text or stored in clear text this is just for dev
+     * SFTPUser authentication should never be handled in clear text or stored in clear text this is just for dev
      * purposes right now, eventually the only auth allowed will be publickey auth, but for testing now we load
      * the user credentials from the properties file
      ***/
     public SFTPLoginService(SFTPServerProperties sftpServerProperties) {
         this.maxLoginAttempts = sftpServerProperties.getMaxLoginAttemptThreshold();
         this.delayBetweenAttempts = sftpServerProperties.getDelayBetweenLoginAttempts();
-        for(User user: sftpServerProperties.getUsers()){
-            userCredentials.put(user.getUsername(), user.getPassword());
+        for(SFTPUser SFTPUser : sftpServerProperties.getSFTPUsers()){
+            userCredentials.put(SFTPUser.getUsername(), SFTPUser.getPassword());
         }
     }
 
