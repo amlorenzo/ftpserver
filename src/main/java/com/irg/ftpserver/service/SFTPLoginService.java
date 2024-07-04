@@ -37,8 +37,8 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
     public SFTPLoginService(SFTPServerProperties sftpServerProperties) {
         this.maxLoginAttempts = sftpServerProperties.getMaxLoginAttemptThreshold();
         this.delayBetweenAttempts = sftpServerProperties.getDelayBetweenLoginAttempts();
-        for(SFTPUser SFTPUser : sftpServerProperties.getSFTPUsers()){
-            userCredentials.put(SFTPUser.getUsername(), SFTPUser.getPassword());
+        for(SFTPUser sftpUser : sftpServerProperties.getSFTPUsers()){
+            userCredentials.put(sftpUser.getUsername(), sftpUser.getPassword());
         }
     }
 

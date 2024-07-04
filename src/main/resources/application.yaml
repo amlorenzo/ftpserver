@@ -11,7 +11,7 @@ sftp:
     maxWriteDataPacketLength: 32768
     maxLoginAttemptThreshold: 3
     delayBetweenLoginAttempts: 2000
-    users:
+    SFTPUsers:
       - username: testUser
         password: password
         directory: /home/testUser/ftp
