@@ -18,7 +18,7 @@ public class SFTPFileSystemService {
      */
     public VirtualFileSystemFactory createVirtualFileSystemFactory() {
         VirtualFileSystemFactory virtualFileSystemFactory = new VirtualFileSystemFactory();
-        for(SFTPUser SFTPUser : sftpServerProperties.getSFTPUsers()) {
+        for(SFTPUser sftpUser : sftpServerProperties.getSFTPUsers()) {
             virtualFileSystemFactory.setUserHomeDir(sftpUser.getUsername(), Paths.get(sftpUser.getDirectory()));
         }
         return virtualFileSystemFactory;
