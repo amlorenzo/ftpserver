@@ -72,7 +72,6 @@ public class SFTPServerConfig {
         sshServer.addSessionListener(customSFTPSessionListener);
         sshServer.setSubsystemFactories(Collections.singletonList(sftpSubsystemFactory));
 
-        logger.info("SFTP server started on port: {}", sshServer.getPort());
         return sshServer;
     }
 

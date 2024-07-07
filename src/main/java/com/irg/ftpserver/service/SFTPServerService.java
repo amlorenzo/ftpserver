@@ -26,7 +26,7 @@ public class SFTPServerService {
     public void start() {
         try {
             sshServer.start();
-            logger.info("SFTP Server started successfully on port." + sshServer.getPort());
+            logger.info("SFTP Server started successfully on port: {}", sshServer.getPort());
         } catch (IOException e) {
             logger.error("Error starting SFTP Server: {}", e.getMessage(), e);
         }
