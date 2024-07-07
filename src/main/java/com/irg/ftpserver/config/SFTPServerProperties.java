@@ -16,7 +16,13 @@ public class SFTPServerProperties {
     private String keyPath;
     private String hostKeyAlgorithm;
     private List<SFTPUser> SFTPUsers;
+    //SFTP Login properties
     private int maxWriteDataPacketLength;
     private int maxLoginAttemptThreshold;
     private long delayBetweenLoginAttempts;
+    //Executor properties
+    private int corePoolSize;
+    private int maxPoolSize;
+    private long keepAliveTime;
+    private int queueCapacity;
 }

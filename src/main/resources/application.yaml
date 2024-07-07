@@ -1,7 +1,37 @@
 spring:
   application:
     name: irgftpserver
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ftpserver
+    username: ftpserv
+    password: De7896543!!##
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: ftpserverCP
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    schemas: ftpserver
+    table: ftpserver_schema_history
+    url: jdbc:postgresql://localhost:5432/ftpserver
+    baseline-version: 1
+    baseline-description: "Base Migration"
+    user: ftpserv
+    password: De7896543!!##
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: false
+    locations: classpath:db/migration
 
+#SFTP Server Configuration
 sftp:
   server:
     hostkeyalgorithm: RSA
@@ -11,8 +41,15 @@ sftp:
     maxWriteDataPacketLength: 32768
     maxLoginAttemptThreshold: 3
     delayBetweenLoginAttempts: 2000
+    corePoolSize: 2
+    maxPoolSize: 4
+    keepAliveTime: 60
+    queueCapacity: 50
     SFTPUsers:
       - username: testUser
         password: password
         directory: /home/alorenzo/ftp
+
+
+
 

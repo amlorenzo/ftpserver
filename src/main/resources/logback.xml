@@ -15,7 +15,7 @@
             <fileNamePattern>logs/sftp-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- roll over if the file reaches 10MB in size -->
-                <maxFileSize>10MB</maxFileSize>
+                <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
@@ -39,6 +39,24 @@
 
     <!-- Apache MINA SSHD Logger -->
     <logger name="org.apache.sshd" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Spring Framework Logger -->
+    <logger name="org.springframework" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Flyway Logger -->
+    <logger name="org.flywaydb" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Hikari Logger -->
+    <logger name="com.zaxxer.hikari" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>

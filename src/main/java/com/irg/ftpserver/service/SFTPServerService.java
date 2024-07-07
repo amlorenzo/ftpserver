@@ -18,7 +18,7 @@ public class SFTPServerService {
     private static final Logger logger = LoggerFactory.getLogger(SFTPServerService.class);
     private final SshServer sshServer;
 
-    public SFTPServerService(SshServer sshServer) {
+    public SFTPServerService( SshServer sshServer) {
         this.sshServer = sshServer;
     }
 
@@ -28,7 +28,7 @@ public class SFTPServerService {
             sshServer.start();
             logger.info("SFTP Server started successfully on port." + sshServer.getPort());
         } catch (IOException e) {
-            logger.error("Error starting SFTP Server: {}", e.getMessage());
+            logger.error("Error starting SFTP Server: {}", e.getMessage(), e);
         }
     }
 
@@ -38,7 +38,7 @@ public class SFTPServerService {
             sshServer.stop();
             logger.info("SFTP Server stopped successfully.");
         } catch (IOException e) {
-            logger.error("Error stopping SFTP Server: {}", e.getMessage());
+            logger.error("Error stopping SFTP Server: {}", e.getMessage(), e);
         }
     }
 
