@@ -52,7 +52,6 @@ public class SFTPUser {
     @Size(min = 3, max = 25)
     private String companyName;
 
-
     @Column(columnDefinition = "text", nullable = true, name = "public_key")
     @ValidRSAPublicKey(minKeyLength = 2048, message = "Invalid RSA Public Key")
     private String publicKey;

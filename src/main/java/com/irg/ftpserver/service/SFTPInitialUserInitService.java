@@ -38,44 +38,46 @@ public class SFTPInitialUserInitService {
     }
 
     private void createDefaultSFTPUser() {
-        if(sftpUserRepository.findByUsername("testuser").isEmpty()){
-            SFTPUser sftpUser = new SFTPUser();
-            sftpUser.setUsername(sftpServerProperties.getSFTPUsers().getFirst().getUsername());
-            String password = sftpServerProperties.getSFTPUsers().getFirst().getPassword();
-            sftpUser.setPassword(passwordEncoder.encode(password));
-            sftpUser.setDirectory(sftpServerProperties.getSFTPUsers().getFirst().getDirectory());
-            sftpUser.setCreatedDate(new Date());
-            sftpUser.setCompanyId(1);
-            sftpUser.setCompanyName(sftpServerProperties.getSFTPUsers().getFirst().getCompanyName());
-            sftpUser.setTicketUrl(sftpServerProperties.getSFTPUsers().getFirst().getTicketUrl());
-            sftpUser.setEnabled(true);
-            logger.info(sftpServerProperties.getSFTPUsers().getFirst().getPublicKey());
-            sftpUser.setPublicKey(sftpServerProperties.getSFTPUsers().getFirst().getPublicKey());
-            sftpUserRepository.save(sftpUser);
-            logger.info("User {} created successfully with password: {}",sftpUser.getUsername(),password);
-            logger.info("Verifying passwords match for user: testuser: {}",
-                    passwordEncoder.matches(password, sftpUser.getPassword()) ? "Match" : "No Match");
+        for (SFTPUser sftpUser : sftpServerProperties.getSFTPUsers()) {
+            if (sftpUserRepository.findByUsername(sftpUser.getUsername()).isEmpty()) {
+                SFTPUser user = new SFTPUser();
+                user.setUsername(sftpUser.getUsername());
+                String password = sftpUser.getPassword();
+                user.setPassword(passwordEncoder.encode(password));
+                user.setDirectory(sftpUser.getDirectory());
+                user.setCreatedDate(new Date());
+                user.setCompanyId(sftpUser.getCompanyId());
+                user.setCompanyName(sftpUser.getCompanyName());
+                user.setTicketUrl(sftpUser.getTicketUrl());
+                user.setEnabled(true);
+                user.setPublicKey(sftpUser.getPublicKey());
+                sftpUserRepository.save(user);
+                logger.info("User {} created successfully with password: {}", user.getUsername(), password);
+                logger.info("Verifying passwords match for user: {}: {}",
+                        passwordEncoder.matches(password, user.getPassword()) ? "Match" : "No Match");
+            } else {
+                logger.info("User {} already exists, skipping creation.", sftpUser.getUsername());
+            }
         }
     }
 
-    private void createDefaultAdminUser() {
-        if(userRepository.findByUsername("admin").isEmpty()) {
-            User admin = new User();
-            admin.setUsername(sftpServerProperties.getUsers().getFirst().getUsername());
-            String password = sftpServerProperties.getUsers().getFirst().getPassword();
-            admin.setPassword(passwordEncoder.encode(password));
-            admin.setCreatedDate(new Date());
-            admin.setRole(Role.Admin);
-            admin.setCompanyName(sftpServerProperties.getUsers().getFirst().getCompanyName());
-            userRepository.save(admin);
-            logger.info("User {} created successfully with password: {}",admin.getUsername(), password);
-            logger.info("Verifying passwords match for user: admin: {}",
-                    passwordEncoder.matches(password, admin.getPassword()) ? "Match" : "No Match");
+        private void createDefaultAdminUser () {
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                User admin = new User();
+                admin.setUsername(sftpServerProperties.getUsers().getFirst().getUsername());
+                String password = sftpServerProperties.getUsers().getFirst().getPassword();
+                admin.setPassword(passwordEncoder.encode(password));
+                admin.setCreatedDate(new Date());
+                admin.setRole(Role.Admin);
+                admin.setCompanyName(sftpServerProperties.getUsers().getFirst().getCompanyName());
+                userRepository.save(admin);
+                logger.info("User {} created successfully with password: {}", admin.getUsername(), password);
+                logger.info("Verifying passwords match for user: admin: {}",
+                        passwordEncoder.matches(password, admin.getPassword()) ? "Match" : "No Match");
 
-        } else {
-            logger.info("User Admin already exists, skipping creation.");
+            } else {
+                logger.info("User Admin already exists, skipping creation.");
+            }
         }
     }
 
-
-}
