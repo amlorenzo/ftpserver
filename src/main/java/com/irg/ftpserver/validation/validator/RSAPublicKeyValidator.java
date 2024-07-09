@@ -4,17 +4,21 @@ import com.irg.ftpserver.validation.ValidRSAPublicKey;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+import java.nio.ByteBuffer;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublicKey,String> {
+public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublicKey, String> {
 
     private int minKeyLength;
+    private static final Pattern SSH_KEY_PATTERN = Pattern.compile("^ssh-rsa ([A-Za-z0-9+/=\\s]+)\\s.*");
 
     @Override
     public void initialize(ValidRSAPublicKey constraintAnnotation) {
@@ -22,18 +26,60 @@ public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublic
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isEmpty()) {
             return false;
         }
-        byte[] keyBytes = Base64.getDecoder().decode(value);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+
+        Matcher matcher = SSH_KEY_PATTERN.matcher(value);
+        if (!matcher.matches()) {
+            return false;
+        }
+
+        String base64Part = matcher.group(1).replaceAll("\\s+", "");
+        System.out.println("Base64 Part: " + base64Part);
+
+        byte[] keyBytes;
+        try {
+            keyBytes = Base64.getDecoder().decode(base64Part);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Base64 decoding failed: " + e.getMessage());
+            return false;
+        }
+
+        // Parse the SSH key format to extract the modulus and exponent
+        ByteBuffer bb = ByteBuffer.wrap(keyBytes);
+        if (!"ssh-rsa".equals(decodeType(bb))) {
+            System.out.println("Invalid key type.");
+            return false;
+        }
+        byte[] exponentBytes = decodeBytes(bb);
+        byte[] modulusBytes = decodeBytes(bb);
+
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PublicKey publicKey = keyFactory.generatePublic(spec);
-            return publicKey instanceof RSAPublicKey && ((RSAPublicKey) publicKey).getModulus().bitLength() >= minKeyLength;
+            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(new java.math.BigInteger(modulusBytes), new java.math.BigInteger(exponentBytes));
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);
+            boolean isValidKey = publicKey instanceof RSAPublicKey && ((RSAPublicKey) publicKey).getModulus().bitLength() >= minKeyLength;
+            System.out.println("Is valid key: " + isValidKey);
+            return isValidKey;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
+            System.out.println("Key generation failed: " + e.getMessage());
+            return false;
         }
+    }
+
+    private String decodeType(ByteBuffer bb) {
+        int len = bb.getInt();
+        byte[] bytes = new byte[len];
+        bb.get(bytes);
+        return new String(bytes);
+    }
+
+    private byte[] decodeBytes(ByteBuffer bb) {
+        int len = bb.getInt();
+        byte[] bytes = new byte[len];
+        bb.get(bytes);
+        return bytes;
     }
 }

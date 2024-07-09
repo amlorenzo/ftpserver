@@ -1,6 +1,7 @@
 package com.irg.ftpserver.config;
 
 import com.irg.ftpserver.model.SFTPUser;
+import com.irg.ftpserver.model.User;
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class SFTPServerProperties {
     private String keyPath;
     private String hostKeyAlgorithm;
     private List<SFTPUser> SFTPUsers;
+    private List<User> users;
     //SFTP Login properties
     private int maxWriteDataPacketLength;
     private int maxLoginAttemptThreshold;
