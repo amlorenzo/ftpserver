@@ -37,7 +37,6 @@ public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublic
         }
 
         String base64Part = matcher.group(1).replaceAll("\\s+", "");
-        System.out.println("Base64 Part: " + base64Part);
 
         byte[] keyBytes;
         try {
