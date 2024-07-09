@@ -43,7 +43,6 @@ public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublic
         try {
             keyBytes = Base64.getDecoder().decode(base64Part);
         } catch (IllegalArgumentException e) {
-            System.out.println("Base64 decoding failed: " + e.getMessage());
             return false;
         }
 
@@ -60,11 +59,8 @@ public class RSAPublicKeyValidator implements ConstraintValidator<ValidRSAPublic
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             RSAPublicKeySpec keySpec = new RSAPublicKeySpec(new java.math.BigInteger(modulusBytes), new java.math.BigInteger(exponentBytes));
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
-            boolean isValidKey = publicKey instanceof RSAPublicKey && ((RSAPublicKey) publicKey).getModulus().bitLength() >= minKeyLength;
-            System.out.println("Is valid key: " + isValidKey);
-            return isValidKey;
+            return publicKey instanceof RSAPublicKey && ((RSAPublicKey) publicKey).getModulus().bitLength() >= minKeyLength;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            System.out.println("Key generation failed: " + e.getMessage());
             return false;
         }
     }
