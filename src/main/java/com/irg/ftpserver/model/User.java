@@ -51,4 +51,12 @@ public class User {
     @Size(min = 3, max = 25)
     private String companyName;
 
+    @Column(nullable = false, name = "first_login")
+    @NotNull(message = "First Login is required")
+    private boolean firstLogin = true;
+
+    @Column(nullable = true, name="last_login")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginDate;
+
 }

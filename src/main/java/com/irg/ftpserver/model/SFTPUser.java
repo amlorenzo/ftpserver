@@ -64,4 +64,8 @@ public class SFTPUser {
     @Column(nullable = false, name = "enabled")
     @NotNull(message = "Enabled is required")
     private boolean enabled;
+
+    @Column(nullable = true, name="last_login")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginDate;
 }

@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS sftp_users (
      company_name VARCHAR(255) NOT NULL,
      public_key TEXT,
      ticket_url VARCHAR(255) NOT NULL,
-     enabled BOOLEAN NOT NULL DEFAULT TRUE
+     enabled BOOLEAN NOT NULL DEFAULT TRUE,
+     last_login TIMESTAMP NULL
     );
