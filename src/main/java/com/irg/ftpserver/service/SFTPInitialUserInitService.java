@@ -2,6 +2,7 @@ package com.irg.ftpserver.service;
 
 import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.data.Role;
+import com.irg.ftpserver.model.PublicKey;
 import com.irg.ftpserver.model.SFTPUser;
 import com.irg.ftpserver.model.User;
 import com.irg.ftpserver.repository.SFTPUserRepository;
@@ -13,8 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Data
@@ -38,25 +40,36 @@ public class SFTPInitialUserInitService {
     }
 
     private void createDefaultSFTPUser() {
-        for (SFTPUser sftpUser : sftpServerProperties.getSFTPUsers()) {
-            if (sftpUserRepository.findByUsername(sftpUser.getUsername()).isEmpty()) {
+        for (SFTPUser sftpUserConfig : sftpServerProperties.getSFTPUsers()) {
+            if (sftpUserRepository.findByUsername(sftpUserConfig.getUsername()).isEmpty()) {
                 SFTPUser user = new SFTPUser();
-                user.setUsername(sftpUser.getUsername());
-                String password = sftpUser.getPassword();
+                user.setUsername(sftpUserConfig.getUsername());
+                String password = sftpUserConfig.getPassword();
                 user.setPassword(passwordEncoder.encode(password));
-                user.setDirectory(sftpUser.getDirectory());
+                user.setDirectory(sftpUserConfig.getDirectory());
                 user.setCreatedDate(new Date());
-                user.setCompanyId(sftpUser.getCompanyId());
-                user.setCompanyName(sftpUser.getCompanyName());
-                user.setTicketUrl(sftpUser.getTicketUrl());
+                user.setCompanyId(sftpUserConfig.getCompanyId());
+                user.setCompanyName(sftpUserConfig.getCompanyName());
+                user.setTicketUrl(sftpUserConfig.getTicketUrl());
+                user.setPasswordLoginEnabled(sftpUserConfig.isPasswordLoginEnabled());
                 user.setEnabled(true);
-                user.setPublicKey(sftpUser.getPublicKey());
+
+                //Setting Public Keys
+                List<PublicKey> publicKeys = new ArrayList<>();
+                for (String  publicKeyString: sftpUserConfig.getPublicKeysFromConfig()) {
+                    PublicKey key = new PublicKey();
+                    key.setPublicKey(publicKeyString);
+                    key.setSftpUser(user);
+                    key.setCreatedDate(new Date());
+                    publicKeys.add(key);
+                }
+                user.setPublicKeys(publicKeys);
                 sftpUserRepository.save(user);
                 logger.info("User {} created successfully with password: {}", user.getUsername(), password);
                 logger.info("Verifying passwords match for user: {}: {}",
                         passwordEncoder.matches(password, user.getPassword()) ? "Match" : "No Match");
             } else {
-                logger.info("User {} already exists, skipping creation.", sftpUser.getUsername());
+                logger.info("User {} already exists, skipping creation.", sftpUserConfig.getUsername());
             }
         }
     }

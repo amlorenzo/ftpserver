@@ -21,11 +21,11 @@ public class SFTPServerProperties {
     //SFTP Login properties
     private int maxWriteDataPacketLength;
     private int maxLoginAttemptThreshold;
-    private long delayBetweenLoginAttempts;
+    private int delayBetweenLoginAttempts;
     //Executor properties
     private int corePoolSize;
     private int maxPoolSize;
-    private long keepAliveTime;
+    private int keepAliveTime;
     private int queueCapacity;
     //Default value is true
     private boolean initialPasswordChangeRequired = true;

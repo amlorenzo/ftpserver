@@ -55,7 +55,7 @@ public class SFTPServerConfig {
         sshServer.setPort(sftpServerProperties.getPort());
         sshServer.setKeyPairProvider(createKeyPairProvider());
         sshServer.setPasswordAuthenticator(sftpLoginService);
-        sshServer.setFileSystemFactory(sftpFileSystemService.createVirtualFileSystemFactory());
+        sshServer.setFileSystemFactory(sftpFileSystemService);
 
         // Logging maximum write data packet length property
         int maxWriteDataPacketLength = sftpServerProperties.getMaxWriteDataPacketLength();

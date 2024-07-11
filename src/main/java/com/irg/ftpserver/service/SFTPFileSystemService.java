@@ -1,30 +1,59 @@
 package com.irg.ftpserver.service;
 
-import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.model.SFTPUser;
+import com.irg.ftpserver.repository.SFTPUserRepository;
+import lombok.AllArgsConstructor;
+import org.apache.sshd.common.file.root.RootedFileSystemProvider;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
+import org.apache.sshd.common.session.SessionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class SFTPFileSystemService {
-    private final SFTPServerProperties sftpServerProperties;
+@AllArgsConstructor
+public class SFTPFileSystemService extends VirtualFileSystemFactory{
+    private static final Logger logger = LoggerFactory.getLogger(SFTPFileSystemService.class);
 
-    /***
-     * This class needs to eventually modified to return a VirtualFileSystemFactory dynamically
-     * will need to use the SpringCloudPackage for this.
-     * @return VirtualFileSystemFactory
-     */
-    public VirtualFileSystemFactory createVirtualFileSystemFactory() {
-        VirtualFileSystemFactory virtualFileSystemFactory = new VirtualFileSystemFactory();
-        for(SFTPUser sftpUser : sftpServerProperties.getSFTPUsers()) {
-            virtualFileSystemFactory.setUserHomeDir(sftpUser.getUsername(), Paths.get(sftpUser.getDirectory()));
+    private final SFTPUserRepository sftpUserRepository;
+
+    private final Map<String, Path> homeDirs = new ConcurrentHashMap<>();
+
+    @Override
+    public FileSystem createFileSystem(SessionContext session) throws IOException {
+
+        Path dir = getUserHomeDir(session);
+
+        if (dir == null) {
+            throw new InvalidPathException(session.getUsername(), "Cannot resolve home directory");
         }
-        return virtualFileSystemFactory;
+
+        return new RootedFileSystemProvider().newFileSystem(dir, Collections.emptyMap());
+    }
+    @Override
+    public Path getUserHomeDir(SessionContext session) throws IOException{
+
+        String username = session.getUsername();
+        Path homeDir = homeDirs.get(username);
+
+        if (homeDir == null) {
+            SFTPUser user = sftpUserRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+            homeDir = Paths.get(user.getDirectory());
+            if (!Files.exists(homeDir)) {
+                Files.createDirectories(homeDir);
+                logger.info("Home directory created: {} For user: {}", homeDir, username);
+            }
+            homeDirs.put(username, homeDir);
+        }
+        return homeDir;
     }
 
-    public SFTPFileSystemService(SFTPServerProperties sftpServerProperties) {
-        this.sftpServerProperties = sftpServerProperties;
-    }
 }
