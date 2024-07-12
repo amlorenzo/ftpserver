@@ -21,17 +21,13 @@ public class SFTPBlockedHost {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, name = "ip_address")
+    @Column(nullable = false, name = "ip_address", unique = true)
     @ValidIpAddress
-    private String IpAddress;
+    private String ipAddress;
 
     @Column(nullable = false, name = "reason")
     @Size(min = 5, max = 255)
     private String reason;
-
-    @Column(nullable = false, name = "username_attempted")
-    @Size(max = 255)
-    private String username;
 
     @Column(nullable = false, name = "blocked_at")
     @Temporal(TemporalType.TIMESTAMP)
