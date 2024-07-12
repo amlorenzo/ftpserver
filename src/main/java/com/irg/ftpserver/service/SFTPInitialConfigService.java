@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @Data
 @AllArgsConstructor
@@ -24,6 +26,7 @@ public class SFTPInitialConfigService {
     @PostConstruct
     public void initializeServerConfig() {
         if (sftpServerConfigurationRepository.findAll().isEmpty()) {
+            logger.info("First run, initializing SFTP Server Configuration...");
             SFTPServerConfiguration sftpServerConfiguration = new SFTPServerConfiguration();
             sftpServerConfiguration.setPort(sftpServerProperties.getPort());
             sftpServerConfiguration.setKeyPath(sftpServerProperties.getKeyPath());
@@ -35,8 +38,10 @@ public class SFTPInitialConfigService {
             sftpServerConfiguration.setMaxPoolSize(sftpServerProperties.getMaxPoolSize());
             sftpServerConfiguration.setKeepAliveTime(sftpServerProperties.getKeepAliveTime());
             sftpServerConfiguration.setQueueCapacity(sftpServerProperties.getQueueCapacity());
+            sftpServerConfiguration.setCreatedAt(new Date());
+            sftpServerConfiguration.setModifiedDate(new Date());
             sftpServerConfigurationRepository.save(sftpServerConfiguration);
         }
-
+        logger.info("SFTP Server Configuration initialization not required.");
     }
 }

@@ -42,7 +42,7 @@ public class SFTPUser {
     @Size(min = 3, max = 25)
     private String username;
 
-    @Column(nullable = true, name = "password")
+    @Column(name = "password")
     @Size(min = 60, max = 100)
     private String password;
 
@@ -76,7 +76,7 @@ public class SFTPUser {
     @NotNull(message = "Enabled is required")
     private boolean enabled;
 
-    @Column(nullable = true, name="last_login")
+    @Column(name="last_login")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;
 
@@ -86,9 +86,13 @@ public class SFTPUser {
     @Column(nullable = false, name="public_key_login_enabled")
     private boolean publicKeyLoginEnabled;
 
-    @Column(nullable = true, name="last_password_change")
+    @Column(name="last_password_change")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordChange;
+
+    @Column(nullable = false, name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
 
     @Transient
     private List<String> publicKeysFromConfig = new ArrayList<>();

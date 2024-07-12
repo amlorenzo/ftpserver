@@ -53,6 +53,7 @@ public class SFTPInitialUserInitService {
                 user.setTicketUrl(sftpUserConfig.getTicketUrl());
                 user.setPasswordLoginEnabled(sftpUserConfig.isPasswordLoginEnabled());
                 user.setEnabled(true);
+                user.setModifiedDate(new Date());
 
                 //Setting Public Keys
                 List<PublicKey> publicKeys = new ArrayList<>();
@@ -61,13 +62,16 @@ public class SFTPInitialUserInitService {
                     key.setPublicKey(publicKeyString);
                     key.setSftpUser(user);
                     key.setCreatedDate(new Date());
+                    key.setEnabled(true);
+                    key.setModifiedDate(new Date());
                     publicKeys.add(key);
                 }
                 user.setPublicKeys(publicKeys);
                 sftpUserRepository.save(user);
-                logger.info("User {} created successfully with password: {}", user.getUsername(), password);
-                logger.info("Verifying passwords match for user: {}: {}",
-                        passwordEncoder.matches(password, user.getPassword()) ? "Match" : "No Match");
+                logger.info("User {} created successfully consider loading and creating SFTP Users through the UI",
+                        user.getUsername());
+                logger.info("Password match result: {}", passwordEncoder
+                        .matches(password, user.getPassword()) ? "Match" : "No Match");
             } else {
                 logger.info("User {} already exists, skipping creation.", sftpUserConfig.getUsername());
             }
@@ -83,6 +87,7 @@ public class SFTPInitialUserInitService {
                 admin.setCreatedDate(new Date());
                 admin.setRole(Role.Admin);
                 admin.setCompanyName(sftpServerProperties.getUsers().getFirst().getCompanyName());
+                admin.setModifiedDate(new Date());
                 userRepository.save(admin);
                 logger.info("User {} created successfully with password: {}", admin.getUsername(), password);
                 logger.info("Verifying passwords match for user: admin: {}",

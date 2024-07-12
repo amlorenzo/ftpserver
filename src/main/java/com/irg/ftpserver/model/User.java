@@ -64,8 +64,16 @@ public class User {
     @NotNull(message = "First Login is required")
     private boolean firstLogin = true;
 
-    @Column(nullable = true, name="last_login")
+    @Column(name="last_login")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;
+
+    @Column(name = "last_password_change")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastPasswordChange;
+
+    @Column(nullable = false, name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
 
 }

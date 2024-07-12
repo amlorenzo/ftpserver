@@ -1,4 +1,4 @@
--- V3__Create_SFTP_Server_Configuration.sql
+-- V3__Create_SFTP_Server_Configuration_Table.sql
 
 CREATE TABLE IF NOT EXISTS sftp_server_configuration (
     id UUID PRIMARY KEY,
@@ -11,5 +11,7 @@ CREATE TABLE IF NOT EXISTS sftp_server_configuration (
     core_pool_size INT NOT NULL,
     max_pool_size INT NOT NULL,
     keep_alive_time INT NOT NULL,
-    queue_capacity INT NOT NULL
+    queue_capacity INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_date TIMESTAMP NOT NULL
 );

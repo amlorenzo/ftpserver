@@ -9,5 +9,7 @@ CREATE TABLE IF NOT EXISTS useraccounts (
     role VARCHAR(25) NOT NULL,
     company_name VARCHAR(25) NOT NULL,
     first_login BOOLEAN NOT NULL DEFAULT TRUE,
-    last_login TIMESTAMP NULL
+    last_login TIMESTAMP NULL,
+    last_password_change TIMESTAMP NULL,
+    modified_date TIMESTAMP NOT NULL
 );

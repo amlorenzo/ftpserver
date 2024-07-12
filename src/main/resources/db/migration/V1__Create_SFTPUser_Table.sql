@@ -13,13 +13,16 @@ CREATE TABLE IF NOT EXISTS sftp_users (
      last_login TIMESTAMP NULL,
      password_login_enabled BOOLEAN NOT NULL DEFAULT TRUE,
      public_key_login_enabled BOOLEAN NOT NULL DEFAULT FALSE,
-     last_password_change TIMESTAMP NULL
+     last_password_change TIMESTAMP NULL,
+     modified_date TIMESTAMP NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS public_keys (
        id UUID PRIMARY KEY,
        public_key TEXT NOT NULL,
        sftp_user_id UUID NOT NULL,
+       enabled BOOLEAN NOT NULL DEFAULT TRUE,
        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       modified_date TIMESTAMP NOT NULL,
        FOREIGN KEY (sftp_user_id) REFERENCES sftp_users(id) ON DELETE CASCADE
     );

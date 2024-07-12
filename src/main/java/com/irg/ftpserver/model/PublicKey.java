@@ -1,18 +1,9 @@
 package com.irg.ftpserver.model;
 
 import com.irg.ftpserver.validation.ValidRSAPublicKey;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,7 +25,14 @@ public class PublicKey {
     @JoinColumn(name = "sftp_user_id", nullable = false)
     private SFTPUser sftpUser;
 
+    @Column(nullable = false, name = "enabled")
+    private boolean enabled;
+
     @Column(nullable = false, name = "created_at")
     private Date createdDate;
+
+    @Column(nullable = false, name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
 
 }

@@ -49,7 +49,7 @@ sftp:
     SFTPUsers:
       - username: testuser
         password: password
-        directory: /Users/testuser/ftp
+        directory: /Users/alorenzo/code/ftp
         company-id: 1
         company-name: testcompany
         ticket-url: http://localhost:8080/ticket1
@@ -58,7 +58,7 @@ sftp:
           - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDyfKcD9+FVxDMmZcO+/5PzUKo1sxz300x6oPAvRaBtFhYlQk08tecEdHkae9KKwJ6TtjyrqqQwEj2A28Cn8uuiNZ6+Sk3bUng8WYvFw5KH6kRfoSEHH1M8AsapcfOriLFmCkW0bH6F1pRAhu1D9rMK3H4YUQv15j5Oap18hj7XeBZq/y7C2lgMut8B52LSQjcU53DbGqkxKoTNTHnTfVoIbwEtO8trhxJ7BmCHrdnLXgwYfRtLI4gcnGrNM8RlRgJUlqCVpOZqDgw05+YpHuuDL6iw1SE9o/LL1UtEWJkv7KVnBS7XgFd39mQSCL+062nqbeyY7cSR2y5Xf6DuMtNl testuser@localhost"
       - username: testuser2
         password: password
-        directory: /Users/testuser2/ftp1
+        directory: /Users/alorenzo/code/ftp1
         company-id: 2
         company-name: testcompany2
         ticket-url: http://localhost:8080/ticket2
