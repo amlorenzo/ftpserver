@@ -65,7 +65,7 @@ public class SFTPUser {
     private String companyName;
 
     @OneToMany(mappedBy = "sftpUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PublicKey> publicKeys = new ArrayList<>();
+    private List<SFTPPublicKey> SFTPPublicKeys = new ArrayList<>();
 
     @Column(nullable = false, name = "ticket_url")
     @URL

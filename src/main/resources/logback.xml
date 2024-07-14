@@ -61,4 +61,20 @@
         <appender-ref ref="FILE"/>
     </logger>
 
+    <!-- Hibernate SQL Logger -->
+    <logger name="org.hibernate.SQL" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Hibernate Type Logger -->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
 </configuration>

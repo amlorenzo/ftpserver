@@ -11,13 +11,13 @@ import java.util.UUID;
 @Table(name = "public_keys", schema = "ftpserver")
 @Data
 @NoArgsConstructor
-public class PublicKey {
+public class SFTPPublicKey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(columnDefinition = "text", nullable = true, name = "public_key")
+    @Column(columnDefinition = "text", name = "public_key")
     @ValidRSAPublicKey(minKeyLength = 2048, message = "Invalid RSA Public Key")
     private String publicKey;
 

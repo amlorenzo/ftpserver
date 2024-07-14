@@ -2,18 +2,17 @@ package com.irg.ftpserver.config;
 
 import com.irg.ftpserver.events.CustomSFTPEventListener;
 import com.irg.ftpserver.events.CustomSFTPSessionListener;
-import com.irg.ftpserver.repository.SFTPServerConfigurationRepository;
-import com.irg.ftpserver.service.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.irg.ftpserver.service.SFTPConfigurationService;
+import com.irg.ftpserver.service.SFTPExecutorService;
+import com.irg.ftpserver.service.SFTPFileSystemService;
+import com.irg.ftpserver.service.SFTPLoginService;
+import com.irg.ftpserver.service.SFTPCustomCloseableExecutorService;
 import org.apache.sshd.common.PropertyResolverUtils;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.util.threads.ThreadUtils;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.AbstractGeneratorHostKeyProvider;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.sftp.SftpModuleProperties;
 import org.apache.sshd.sftp.server.SftpSubsystemFactory;
 import org.slf4j.Logger;
@@ -21,12 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
-import java.security.KeyPair;
-import java.security.PublicKey;
 import java.util.*;
 
 @Configuration
@@ -37,17 +31,12 @@ public class SFTPServerConfig {
 
     private SFTPCustomCloseableExecutorService customExecutorService;
 
-    private final SFTPCustomKeyPairProviderService customKeyPairProviderService;
-
     private final SFTPConfigurationService sftpConfigurationService;
 
-    public SFTPServerConfig(SFTPCustomKeyPairProviderService customKeyPairProviderService,
-                            SFTPConfigurationService sftpConfigurationService) {
+    public SFTPServerConfig(SFTPConfigurationService sftpConfigurationService) {
 
-        this.customKeyPairProviderService = customKeyPairProviderService;
         this.sftpConfigurationService = sftpConfigurationService;
     }
-
 
     @Bean
     public SshServer sshServer(CustomSFTPEventListener customSftpEventListener
@@ -74,6 +63,7 @@ public class SFTPServerConfig {
         SshServer sshServer = SshServer.setUpDefaultServer();
         sshServer.setPort(sftpConfigurationService.getLatestConfiguration().getPort());
         sshServer.setPasswordAuthenticator(sftpLoginService);
+        sshServer.setPublickeyAuthenticator(sftpLoginService);
         sshServer.setKeyPairProvider(createKeyPairProvider());
         sshServer.setFileSystemFactory(sftpFileSystemService);
 

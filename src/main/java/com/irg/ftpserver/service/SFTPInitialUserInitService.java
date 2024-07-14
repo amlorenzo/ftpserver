@@ -2,7 +2,7 @@ package com.irg.ftpserver.service;
 
 import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.data.Role;
-import com.irg.ftpserver.model.PublicKey;
+import com.irg.ftpserver.model.SFTPPublicKey;
 import com.irg.ftpserver.model.SFTPUser;
 import com.irg.ftpserver.model.User;
 import com.irg.ftpserver.repository.SFTPUserRepository;
@@ -56,17 +56,17 @@ public class SFTPInitialUserInitService {
                 user.setModifiedDate(new Date());
 
                 //Setting Public Keys
-                List<PublicKey> publicKeys = new ArrayList<>();
+                List<SFTPPublicKey> SFTPPublicKeys = new ArrayList<>();
                 for (String  publicKeyString: sftpUserConfig.getPublicKeysFromConfig()) {
-                    PublicKey key = new PublicKey();
+                    SFTPPublicKey key = new SFTPPublicKey();
                     key.setPublicKey(publicKeyString);
                     key.setSftpUser(user);
                     key.setCreatedDate(new Date());
                     key.setEnabled(true);
                     key.setModifiedDate(new Date());
-                    publicKeys.add(key);
+                    SFTPPublicKeys.add(key);
                 }
-                user.setPublicKeys(publicKeys);
+                user.setSFTPPublicKeys(SFTPPublicKeys);
                 sftpUserRepository.save(user);
                 logger.info("User {} created successfully consider loading and creating SFTP Users through the UI",
                         user.getUsername());
