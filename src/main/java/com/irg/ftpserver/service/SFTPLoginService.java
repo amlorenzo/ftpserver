@@ -1,15 +1,9 @@
 package com.irg.ftpserver.service;
 
-import com.irg.ftpserver.config.SFTPServerConfig;
-import com.irg.ftpserver.config.SFTPServerProperties;
 import com.irg.ftpserver.events.HostBlockedEvent;
 import com.irg.ftpserver.model.SFTPBlockedHost;
-import com.irg.ftpserver.model.SFTPServerConfiguration;
 import com.irg.ftpserver.model.SFTPUser;
 import com.irg.ftpserver.repository.SFTPBlockedHostsRepository;
-import com.irg.ftpserver.repository.SFTPServerConfigurationRepository;
-import com.irg.ftpserver.repository.SFTPUserRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
@@ -30,34 +24,44 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @DependsOn({"SFTPInitialConfigService", "SFTPInitialUserInitService"})
 public class SFTPLoginService implements PasswordAuthenticator, ApplicationEventPublisherAware {
+
     private final Logger logger = LoggerFactory.getLogger(SFTPLoginService.class);
+
     private final Map<String, Integer> loginAttempts = new ConcurrentHashMap<>();
+
     private final int maxLoginAttempts;
+
     private final int delayBetweenAttempts;
+
     private ApplicationEventPublisher eventPublisher;
-    private final SFTPUserRepository sftpUserRepository;
-    private final SFTPServerConfigurationRepository sftpServerConfigurationRepository;
+
+    private final SFTPUserService sftpUserService;
+
+    private final SFTPConfigurationService sftpConfigurationService;
+
+    private final BlockedHostService blockedHostService;
+
     private final SFTPBlockedHostsRepository sftpBlockedHostsRepository;
+
     private final PasswordEncoder passwordEncoder;
 
 
-    public SFTPLoginService(SFTPServerProperties sftpServerProperties, SFTPUserRepository sftpUserRepository,
-                            SFTPServerConfigurationRepository sftpServerConfigurationRepository,
-                            SFTPBlockedHostsRepository sftpBlockedHostsRepository, PasswordEncoder passwordEncoder, SFTPServerConfig sftpServerConfig) {
-        this.sftpUserRepository = sftpUserRepository;
-        this.sftpServerConfigurationRepository = sftpServerConfigurationRepository;
+    public SFTPLoginService(SFTPBlockedHostsRepository sftpBlockedHostsRepository,
+                            PasswordEncoder passwordEncoder,
+                            SFTPUserService sftpUserService,
+                            SFTPConfigurationService sftpConfigurationService,
+                            BlockedHostService blockedHostService) {
+
         this.sftpBlockedHostsRepository = sftpBlockedHostsRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sftpUserService = sftpUserService;
+        this.sftpConfigurationService = sftpConfigurationService;
+        this.blockedHostService = blockedHostService;
 
-        List<SFTPServerConfiguration> configs = sftpServerConfigurationRepository.findAll();
-        if (configs.isEmpty()) {
-            logger.warn("SFTP Server configuration not found, check your application.yml file");
-            throw new RuntimeException("SFTP Server configuration not found");
-        }
-        //Returns the latest configuration from the database
-        SFTPServerConfiguration sftpServerConfig1 = configs.getLast();
-        this.maxLoginAttempts = sftpServerConfig1.getMaxLoginAttemptThreshold();
-        this.delayBetweenAttempts = sftpServerConfig1.getDelayBetweenLoginAttempts();
+        this.maxLoginAttempts = this.sftpConfigurationService.getLatestConfiguration().getMaxLoginAttemptThreshold();
+        this.delayBetweenAttempts = this.sftpConfigurationService.getLatestConfiguration()
+                .getDelayBetweenLoginAttempts();
+
     }
 
     @Override
@@ -74,23 +78,9 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
         logger.info("Recorded failed attempt for IP Address: {}. Attempt count: {}", ipAddress, attemptCount);
 
         if (attemptCount >= maxLoginAttempts){
+
             String reason = String.format("Exceeded maximum login attempts %d", maxLoginAttempts);
-
-            Date blockedAt = new Date();
-            boolean notAllow = false;
-
-            Optional<SFTPBlockedHost> existingEntry = sftpBlockedHostsRepository.findByIpAddress(ipAddress);
-
-            if(existingEntry.isPresent()){
-                SFTPBlockedHost blockedHost = existingEntry.get();
-                blockedHost.setReason(reason);
-                blockedHost.setBlockedAt(blockedAt);
-                blockedHost.setAllow(notAllow);
-                this.sftpBlockedHostsRepository.save(blockedHost);
-            } else {
-                SFTPBlockedHost blockedHost = new SFTPBlockedHost(null, ipAddress, reason, blockedAt, notAllow);
-                this.sftpBlockedHostsRepository.save(blockedHost);
-            }
+            blockedHostService.recordFailedAttempt(ipAddress,reason);
             logger.warn("Blocking Host: {} after {} failed login attempts", ipAddress, attemptCount);
             loginAttempts.remove(ipAddress);
             eventPublisher.publishEvent(new HostBlockedEvent(session, ipAddress));
@@ -98,26 +88,20 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
     }
 
     public boolean isBlocked(String ipAddress){
-        Optional<SFTPBlockedHost> blockedHost = sftpBlockedHostsRepository.findByIpAddressAndAllowFalse(ipAddress);
-        return blockedHost.isPresent() && !blockedHost.get().isAllow();
+
+        return blockedHostService.isBlocked(ipAddress);
     }
 
     public void clearAttempts(String ipAddress){
+
         loginAttempts.remove(ipAddress);
         logger.info("Cleared attempts for host: {}", ipAddress);
     }
 
     public void unblock(String ipAddress){
-        Optional<SFTPBlockedHost> blockedHost = sftpBlockedHostsRepository.findByIpAddress(ipAddress);
-        if (blockedHost.isPresent()){
-            SFTPBlockedHost host = blockedHost.get();
-            host.setAllow(true);
-            sftpBlockedHostsRepository.save(host);
-            logger.info("Unblocked host: {}", ipAddress);
-        } else {
-            logger.warn("Attempted to unblock host that was not blocked: {}", ipAddress);
-        }
 
+        blockedHostService.unblock(ipAddress);
+        logger.info("Unblocked host: {}", ipAddress);
     }
 
     @Override
@@ -133,7 +117,7 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
             return false;
         }
 
-        Optional<SFTPUser> sftpUser = sftpUserRepository.findByUsername(username);
+        Optional<SFTPUser> sftpUser = this.sftpUserService.getUserByUserName(username);
         if(sftpUser.isEmpty()){
             logger.info("User not found: {}", username);
             recordFailedAttempt(session);
@@ -142,6 +126,7 @@ public class SFTPLoginService implements PasswordAuthenticator, ApplicationEvent
 
         SFTPUser user = sftpUser.get();
         boolean isAuthenticated = passwordEncoder.matches(password, user.getPassword());
+
         if (!isAuthenticated){
             logger.info("Authentication failed for user: {} From Host:{}", username,
                     session.getIoSession().getRemoteAddress());
