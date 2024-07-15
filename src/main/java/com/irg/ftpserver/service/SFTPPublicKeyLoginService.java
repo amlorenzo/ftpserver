@@ -88,7 +88,7 @@ public class SFTPPublicKeyLoginService implements PublickeyAuthenticator {
             }
         }
 
-        blockedHostService.recordFailedUserAttempt(ipAddress, "Public key mismatch", "SFTPPublicKeyLoginService", session);
+        blockedHostService.recordFailedPasswordAttempt(ipAddress, "Public key mismatch", "SFTPPublicKeyLoginService", session);
         return false;
     }
 
