@@ -46,6 +46,7 @@ sftp:
     keepAliveTime: 60
     queueCapacity: 50
     initialPasswordChangeRequired: true
+    time-zone: UTC
     SFTPUsers:
       - username: testuser
         password: password

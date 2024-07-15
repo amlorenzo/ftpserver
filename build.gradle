@@ -64,3 +64,13 @@ tasks.named('test') {
 	useJUnitPlatform()
 	jvmArgs '-XX:+EnableDynamicAgentLoading','-XX:+EnableDynamicAgentLoading', '-Djdk.instrument.traceUsage'
 }
+
+import org.gradle.api.tasks.Delete
+
+def logsDir = file ("${projectDir}/logs")
+
+tasks.register('cleanLogs', Delete) {
+	delete logsDir
+}
+
+clean.dependsOn(cleanLogs)

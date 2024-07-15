@@ -27,6 +27,7 @@ public class SFTPServerProperties {
     private int maxPoolSize;
     private int keepAliveTime;
     private int queueCapacity;
+    private String timeZone;
     //Default value is true
     private boolean initialPasswordChangeRequired = true;
 }

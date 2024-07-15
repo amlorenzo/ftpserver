@@ -80,6 +80,11 @@ public class SFTPServerConfiguration {
     @Max(256)
     private int queueCapacity;
 
+    @Column(nullable = false, name = "time_zone")
+    @NotNull
+    @Size(max=64)
+    private String timeZone;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

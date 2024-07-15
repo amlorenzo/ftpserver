@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS sftp_server_configuration (
     max_pool_size INT NOT NULL,
     keep_alive_time INT NOT NULL,
     queue_capacity INT NOT NULL,
+    time_zone VARCHAR(64) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_date TIMESTAMP NOT NULL
 );
