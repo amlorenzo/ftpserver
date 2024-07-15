@@ -85,6 +85,11 @@ public class SFTPServerConfiguration {
     @Size(max=64)
     private String timeZone;
 
+    @Column(name = "max_idle_time")
+    @Min(0)
+    @Max(60000)
+    private long maxIdleTime;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

@@ -1,6 +1,7 @@
 package com.irg.ftpserver.events;
 
-import com.irg.ftpserver.service.SFTPLoginService;
+import com.irg.ftpserver.service.BlockedHostService;
+import lombok.Data;
 import org.apache.sshd.common.kex.KexProposalOption;
 import org.apache.sshd.common.session.Session;
 import org.apache.sshd.common.session.SessionListener;
@@ -18,17 +19,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * Custom Session Listener to log session events
  ************************************************************/
 @Component
+@Data
 public class CustomSFTPSessionListener implements SessionListener {
 
     private static final Logger log = LoggerFactory.getLogger(CustomSFTPSessionListener.class);
-    private final SFTPLoginService sftpLoginService;
+    private final BlockedHostService blockedHostService;
     private final Map<Session, Boolean> sessionClosedFlags = new ConcurrentHashMap<>();
+    private long maxIdleTime;
 
     @Override
     public void sessionCreated(Session session) {
         String host = ((InetSocketAddress)session.getIoSession().getRemoteAddress()).getAddress().getHostAddress();
         log.info("Session established: {}", session);
-        if (sftpLoginService.isBlocked(host)){
+        if (blockedHostService.isBlocked(host)){
             log.info("Blocked Host: {} tried to connect", host);
             session.close(false);
         }
@@ -68,7 +71,7 @@ public class CustomSFTPSessionListener implements SessionListener {
         }
     }
 
-    public CustomSFTPSessionListener(SFTPLoginService sftpLoginService) {
-        this.sftpLoginService = sftpLoginService;
+    public CustomSFTPSessionListener(BlockedHostService blockedHostService) {
+        this.blockedHostService = blockedHostService;
     }
 }

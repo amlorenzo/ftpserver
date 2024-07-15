@@ -45,6 +45,7 @@ sftp:
     maxPoolSize: 4
     keepAliveTime: 60
     queueCapacity: 50
+    max-idle-time: 600
     initialPasswordChangeRequired: true
     time-zone: UTC
     SFTPUsers:

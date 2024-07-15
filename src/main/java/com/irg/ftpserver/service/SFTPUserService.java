@@ -24,7 +24,7 @@ public class SFTPUserService {
         Optional<SFTPUser> sftpUser = sftpUserRepository.findByUsername(userName);
         if(sftpUser.isEmpty()){
             logger.error("User not found in repository with username: " + userName);
-            throw new RuntimeException("User not found in repository with username: " + userName);
+            return Optional.empty();
         }
         return sftpUser;
     }

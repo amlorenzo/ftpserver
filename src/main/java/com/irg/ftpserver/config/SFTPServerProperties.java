@@ -28,6 +28,7 @@ public class SFTPServerProperties {
     private int keepAliveTime;
     private int queueCapacity;
     private String timeZone;
+    private long maxIdleTime;
     //Default value is true
     private boolean initialPasswordChangeRequired = true;
 }

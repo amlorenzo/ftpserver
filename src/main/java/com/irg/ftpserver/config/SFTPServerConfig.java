@@ -2,11 +2,8 @@ package com.irg.ftpserver.config;
 
 import com.irg.ftpserver.events.CustomSFTPEventListener;
 import com.irg.ftpserver.events.CustomSFTPSessionListener;
-import com.irg.ftpserver.service.SFTPConfigurationService;
-import com.irg.ftpserver.service.SFTPExecutorService;
-import com.irg.ftpserver.service.SFTPFileSystemService;
-import com.irg.ftpserver.service.SFTPLoginService;
-import com.irg.ftpserver.service.SFTPCustomCloseableExecutorService;
+import com.irg.ftpserver.service.*;
+import com.irg.ftpserver.service.SFTPPasswordLoginService;
 import org.apache.sshd.common.PropertyResolverUtils;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.util.threads.ThreadUtils;
@@ -41,8 +38,9 @@ public class SFTPServerConfig {
     @Bean
     public SshServer sshServer(CustomSFTPEventListener customSftpEventListener
             , CustomSFTPSessionListener customSFTPSessionListener,
-                               SFTPLoginService sftpLoginService,
-                               SFTPFileSystemService sftpFileSystemService) {
+                               SFTPPasswordLoginService sftpPasswordLoginService,
+                               SFTPFileSystemService sftpFileSystemService,
+                               SFTPPublicKeyLoginService sftpPublicKeyLoginService){
 
         SFTPExecutorService sftpExecutorService = new SFTPExecutorService(
                 this.sftpConfigurationService.getLatestConfiguration().getCorePoolSize(),
@@ -62,10 +60,13 @@ public class SFTPServerConfig {
         //Set SSH Server Properties
         SshServer sshServer = SshServer.setUpDefaultServer();
         sshServer.setPort(sftpConfigurationService.getLatestConfiguration().getPort());
-        sshServer.setPasswordAuthenticator(sftpLoginService);
-        sshServer.setPublickeyAuthenticator(sftpLoginService);
+        sshServer.setPasswordAuthenticator(sftpPasswordLoginService);
+        sshServer.setPublickeyAuthenticator(sftpPublicKeyLoginService);
         sshServer.setKeyPairProvider(createKeyPairProvider());
         sshServer.setFileSystemFactory(sftpFileSystemService);
+
+        // Set idle timeout implement later
+
 
         // Logging maximum write data packet length property
         int maxWriteDataPacketLength = sftpConfigurationService.getLatestConfiguration().getMaxWriteDataPacketLength();
