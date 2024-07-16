@@ -106,8 +106,41 @@ The project aims to provide a comprehensive SFTP server solution with the follow
 This section outlines the key features that the project aims to achieve, with clear distinctions between what has been completed and what is still pending.
 
 ### Technologies Used
-- Apache MINA SSHD
-- Spring Boot
+The project leverages a combination of modern technologies and frameworks to provide a robust and scalable SFTP server solution. Below is a list of key technologies used in this project:
+
+#### Core Technologies
+- **Java 21**: The primary programming language used for the project.
+- **Spring Boot 3.3.1**: Provides a robust framework for building Java-based applications, enabling easy setup and rapid development.
+    - **Spring Boot Starter Web**: For building web applications and RESTful services.
+    - **Spring Boot Starter Security**: For securing the application.
+    - **Spring Boot Starter Data JPA**: For data persistence using JPA and Hibernate.
+    - **Spring Boot Starter Validation**: For validating application data.
+- **Apache MINA SSHD 2.13.1**: Used for implementing the core SFTP server functionalities.
+    - **sshd-core**: Core SSHD library.
+    - **sshd-sftp**: SFTP support in Apache MINA SSHD.
+- **PostgreSQL**: Used as the primary database for storing user data and configurations.
+    - **PostgreSQL JDBC Driver**: For connecting to the PostgreSQL database.
+    - **Flyway**: For database migrations.
+
+#### Development and Build Tools
+- **Gradle**: Build automation tool used for managing dependencies and building the project.
+- **Lombok**: For reducing boilerplate code in Java by generating getters, setters, and other utility methods.
+- **Springfox 3.0.0**: For documenting RESTful APIs.
+
+#### Testing
+- **JUnit 5**: For unit testing and integration testing.
+- **Mockito**: For mocking dependencies in tests.
+- **Logback**: For logging during tests.
+
+#### Configuration Management
+- **HikariCP 5.0.1**: A high-performance JDBC connection pool.
+
+#### Pending and Future Technologies
+- **Spring Boot Starter GraphQL**: To be used for developing a GraphQL API for flexible and efficient data querying.
+- **Spring Cloud**: Potentially required for dynamically reloading application context beans after configuration changes.
+- **AWS SDK**: To be used for integrating with AWS services like IAM and S3.
+- **Spring Cloud AWS**: For seamless integration with AWS services, enabling features like IAM configuration and S3 connectivity.
+- **Admin UI Framework**: To be decided for building the web-based admin interface for managing users and configurations.
 
 ## Getting Started
 
