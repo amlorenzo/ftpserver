@@ -106,8 +106,8 @@ The project aims to provide a comprehensive SFTP server solution with the follow
 This section outlines the key features that the project aims to achieve, with clear distinctions between what has been completed and what is still pending.
 
 ### Technologies Used
-The project leverages a combination of modern technologies and frameworks to provide a robust and scalable SFTP server solution. Below is a list of key technologies used in this project:
 
+The project leverages a combination of modern technologies and frameworks to provide a robust and scalable SFTP server solution. Below is a list of key technologies used in this project:
 #### Core Technologies
 - **Java 21**: The primary programming language used for the project.
 - **Spring Boot 3.3.1**: Provides a robust framework for building Java-based applications, enabling easy setup and rapid development.
@@ -141,6 +141,7 @@ The project leverages a combination of modern technologies and frameworks to pro
 - **AWS SDK**: To be used for integrating with AWS services like IAM and S3.
 - **Spring Cloud AWS**: For seamless integration with AWS services, enabling features like IAM configuration and S3 connectivity.
 - **Admin UI Framework**: To be decided for building the web-based admin interface for managing users and configurations.
+- **GitHub Actions**: For CI/CD pipelines to automate testing, building, and deployment processes.
 
 ## Getting Started
 
