@@ -53,7 +53,29 @@ This project is an SFTP server using Apache MINA SSHD and Spring Boot.
 ## Project Overview
 
 ### Introduction
-This project is an SFTP server using Apache MINA SSHD and Spring Boot.
+This is an SFTP server based on the [Apache SSHD MINA library](https://mina.apache.org/sshd-project/), Spring Boot, and PostgreSQL. The fundamental idea behind the project is to provide a serverless SFTP server with Virtual File System (VFS) connectivity to cloud storage, such as AWS S3, Google Cloud Platform (GCP), and others. The project aims to offer a scalable and flexible solution for secure file transfers.
+
+Key features include:
+- **Cloud Storage Integration**: Seamless integration with various cloud storage providers, enabling users to interact with cloud files as if they were local.
+- **Admin Interface**: A comprehensive administrative interface for managing users and permissions. This will include integration with cloud identity and access management (IAM) services like AWS IAM.
+- **Secure Logging**: Robust logging mechanisms to ensure all actions are recorded securely. Logs are stored in a manner that prevents tampering and supports auditing.
+- **Advanced Security Features**: Enhanced security measures such as IP blocking, multi-factor authentication, and detailed access controls.
+
+Currently, the project is a work in progress. The following components have been implemented:
+- **SFTP Functionality**: Basic SFTP operations using Apache MINA SSHD.
+- **Security Features**: IP blocking based on failed login attempts, and support for both password and public key authentication.
+- **Event Listeners**: Custom event listeners to handle various server events, providing hooks for extending functionality.
+- **Database Connectivity**: Integration with PostgreSQL for user management and configuration storage.
+
+### Pending Work
+There are several key features and enhancements that are still under development:
+- **REST API/GraphQL API**: Development of a RESTful API and/or GraphQL API to allow programmatic access to server functionalities, user management, and file operations.
+- **Admin Interface**: Building a user-friendly web interface for administrators to manage users, view logs, and configure server settings.
+- **Enhanced Logging and Auditing**: Further improvements to logging mechanisms to ensure comprehensive auditing capabilities.
+- **Additional Security Enhancements**: Implementing advanced security features such as multi-factor authentication and more granular access controls.
+- **VFS Connectivity**: Extending the VFS capabilities to support a wider range of cloud storage providers and ensuring seamless integration.
+
+This project aims to deliver a robust and scalable SFTP server solution, leveraging the power of cloud storage and modern security practices to meet the needs of today's enterprises.
 
 ### Features
 - Feature 1
