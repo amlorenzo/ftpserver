@@ -78,9 +78,32 @@ There are several key features and enhancements that are still under development
 This project aims to deliver a robust and scalable SFTP server solution, leveraging the power of cloud storage and modern security practices to meet the needs of today's enterprises.
 
 ### Features
-- Feature 1
-- Feature 2
-- Feature 3
+The project aims to provide a comprehensive SFTP server solution with the following features:
+
+### Completed Features
+- ~~**SSH Server**: The core SFTP server functionality using Apache MINA SSHD.~~
+- ~~**Password Authentication**: Support for user authentication via passwords.~~
+- ~~**Public Key Authentication**: Support for user authentication via public key.~~
+- ~~**Logging/Event Monitoring**: Robust logging and event monitoring mechanisms to track server activity and user actions.~~
+- ~~**Database Persistence**: Integration with PostgreSQL for persisting user data and server configurations.~~
+- ~~**Configuration Persistence**: Storing server configurations in the database for easy management.~~
+
+### Pending Work
+- **Capability to Reload Application Context Beans**: Automatically reload application context beans after an admin makes configuration changes.
+- **REST API**: Development of a RESTful API to allow programmatic access to server functionalities, user management, and file operations.
+- **GraphQL API**: Development of a GraphQL API for flexible and efficient querying and manipulation of server data.
+- **Admin UI**: Building a user-friendly web interface for administrators to manage users, view logs, and configure server settings.
+- **Integration with AWS IAM**:
+    - **Configurable IAM Settings**: Allow an admin to configure IAM settings through the Admin UI.
+    - **Admin Login Using IAM Accounts**: Enable administrators to log in using their AWS IAM accounts, ensuring secure and centralized user management.
+    - **IAM Role and Permission Management**: Provide an interface to manage user roles and permissions using AWS Identity and Access Management (IAM).
+- **Integration with AWS S3**: Admin interface to configure and manage VFS connectivity to AWS S3 for seamless cloud storage integration.
+- **Additional Security Enhancements**: Implementing advanced security features such as multi-factor authentication and more granular access controls.
+- **Enhanced Logging and Auditing**: Further improvements to logging mechanisms to ensure comprehensive auditing capabilities.
+- **Extended VFS Connectivity**: Support for a wider range of cloud storage providers, ensuring seamless integration with various cloud storage solutions.
+- **Advanced Monitoring and Alerting**: Implementing monitoring and alerting mechanisms to notify administrators of suspicious activities or critical server events.
+
+This section outlines the key features that the project aims to achieve, with clear distinctions between what has been completed and what is still pending.
 
 ### Technologies Used
 - Apache MINA SSHD
