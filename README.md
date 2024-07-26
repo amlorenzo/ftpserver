@@ -69,7 +69,7 @@ Currently, the project is a work in progress. The following components have been
 
 ### Pending Work
 There are several key features and enhancements that are still under development:
-- **REST API/GraphQL API**: Development of a RESTful API and/or GraphQL API to allow programmatic access to server functionalities, user management, and file operations.
+- **REST API**: Development of a RESTful API to allow programmatic access to server functionalities, user management, and file operations.
 - **Admin Interface**: Building a user-friendly web interface for administrators to manage users, view logs, and configure server settings.
 - **Enhanced Logging and Auditing**: Further improvements to logging mechanisms to ensure comprehensive auditing capabilities.
 - **Additional Security Enhancements**: Implementing advanced security features such as multi-factor authentication and more granular access controls.
@@ -91,7 +91,6 @@ The project aims to provide a comprehensive SFTP server solution with the follow
 ### Pending Work
 - **Capability to Reload Application Context Beans**: Automatically reload application context beans after an admin makes configuration changes.
 - **REST API**: Development of a RESTful API to allow programmatic access to server functionalities, user management, and file operations.
-- **GraphQL API**: Development of a GraphQL API for flexible and efficient querying and manipulation of server data.
 - **Admin UI**: Building a user-friendly web interface for administrators to manage users, view logs, and configure server settings.
 - **Integration with AWS IAM**:
     - **Configurable IAM Settings**: Allow an admin to configure IAM settings through the Admin UI.
@@ -107,7 +106,6 @@ This section outlines the key features that the project aims to achieve, with cl
 
 ### Technologies Used
 
-The project leverages a combination of modern technologies and frameworks to provide a robust and scalable SFTP server solution. Below is a list of key technologies used in this project:
 #### Core Technologies
 - **Java 21**: The primary programming language used for the project.
 - **Spring Boot 3.3.1**: Provides a robust framework for building Java-based applications, enabling easy setup and rapid development.
@@ -136,7 +134,6 @@ The project leverages a combination of modern technologies and frameworks to pro
 - **HikariCP 5.0.1**: A high-performance JDBC connection pool.
 
 #### Pending and Future Technologies
-- **Spring Boot Starter GraphQL**: To be used for developing a GraphQL API for flexible and efficient data querying.
 - **Spring Cloud**: Potentially required for dynamically reloading application context beans after configuration changes.
 - **AWS SDK**: To be used for integrating with AWS services like IAM and S3.
 - **Spring Cloud AWS**: For seamless integration with AWS services, enabling features like IAM configuration and S3 connectivity.

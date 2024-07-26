@@ -18,7 +18,10 @@ public class SFTPServerApplication {
 	private static final Logger logger = LoggerFactory.getLogger(SFTPServerApplication.class);
 
 	private final SFTPConfigurationService sftpConfigurationService;
-	public static void main(String[] args) {SpringApplication.run(SFTPServerApplication.class, args);}
+
+	public static void main(String[] args) {
+		SpringApplication.run(SFTPServerApplication.class, args);
+	}
 
 	@PostConstruct
 	@DependsOn({"SFTPInitialConfigService"})

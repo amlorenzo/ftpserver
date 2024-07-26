@@ -48,8 +48,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
-	// GraphQL dependencies
-	//implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	//Auth0 Java JWT dependency - Well maintained library
+	implementation 'com.auth0:java-jwt:4.2.1'
 
 	//Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

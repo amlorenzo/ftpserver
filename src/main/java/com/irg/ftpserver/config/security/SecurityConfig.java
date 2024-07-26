@@ -1,4 +1,4 @@
-package com.irg.ftpserver.config;
+package com.irg.ftpserver.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
