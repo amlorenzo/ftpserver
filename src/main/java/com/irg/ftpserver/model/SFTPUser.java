@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.ToString;
 import org.hibernate.validator.constraints.URL;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Data  // Generates getters, setters, equals, hashCode, and toString
+@Data  // Generates getters, setters, equals, and hashcode
+@ToString
 @NoArgsConstructor  // Generates default constructor
 @AllArgsConstructor  // Generates constructor with all arguments
 @Table(name = "sftp_users", schema = "ftpserver")
@@ -64,6 +66,7 @@ public class SFTPUser {
     @Size(min = 3, max = 25)
     private String companyName;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "sftpUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SFTPPublicKey> SFTPPublicKeys = new ArrayList<>();
 

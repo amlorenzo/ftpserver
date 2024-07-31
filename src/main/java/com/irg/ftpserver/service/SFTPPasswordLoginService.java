@@ -50,18 +50,23 @@ public class SFTPPasswordLoginService implements PasswordAuthenticator {
     public boolean authenticate(String username, String password, ServerSession session)
             throws PasswordChangeRequiredException, AsyncAuthException {
 
+        long threadId = Thread.currentThread().threadId();
+        long sessionId = session.getIoSession().getId();
         String ipAddress = ((InetSocketAddress) session.getIoSession().getRemoteAddress()).getAddress().getHostAddress();
-        logger.info("Authenticating user: {} from host: {}", username, ipAddress);
+        logger.info("Thread ID: {}, Session ID: {}, Authenticating user: {} from host: {}", threadId, sessionId,
+                username, ipAddress);
 
         if (blockedHostService.isBlocked(ipAddress)) {
-            logger.warn("Blocked host attempted to connect: {}", ipAddress);
+            logger.warn("Thread ID: {}, Session ID: {}, Blocked host attempted to connect: {}", threadId, sessionId,
+                    ipAddress);
             return false;
         }
 
         Optional<SFTPUser> sftpUser = this.sftpUserService.getUserByUserName(username);
         if (sftpUser.isEmpty()) {
-            logger.info("User not found: {}", username);
-            blockedHostService.recordFailedUserAttempt(ipAddress, "User not found", "SFTPPasswordLoginService", session);
+            logger.info("Thread ID: {}, Session ID: {}, User not found: {}", threadId, sessionId, username);
+            blockedHostService.recordFailedUserAttempt(ipAddress, "User not found",
+                    "SFTPPasswordLoginService", session);
             return false;
         }
 
@@ -69,12 +74,17 @@ public class SFTPPasswordLoginService implements PasswordAuthenticator {
         boolean isAuthenticated = passwordEncoder.matches(password, user.getPassword());
 
         if (!isAuthenticated) {
-            logger.info("Authentication failed for user: {} From Host:{}", username, session.getIoSession().getRemoteAddress());
-            blockedHostService.recordFailedPasswordAttempt(ipAddress, "Incorrect password", "SFTPPasswordLoginService", session);
+            logger.info("Thread ID: {}, Session ID: {}, Authentication failed for user: {} From Host:{}", threadId,
+                    sessionId, username, ipAddress);
+            blockedHostService.recordFailedPasswordAttempt(ipAddress, "Incorrect password",
+                    "SFTPPasswordLoginService", session);
             return false;
         } else {
-            logger.info("Authentication succeeded for user: {} From: {}", username, session.getIoSession().getRemoteAddress());
-            blockedHostService.clearAttempts(ipAddress, "SFTPPasswordLoginService");
+            logger.info("Thread ID: {}, Session ID: {}, Authentication succeeded for user: {} From: {}", threadId,
+                    sessionId, username, ipAddress);
+            if (blockedHostService.hasAttempts(ipAddress)) {
+                blockedHostService.clearAttempts(ipAddress, "SFTPPasswordLoginService");
+            }
         }
         return isAuthenticated;
     }

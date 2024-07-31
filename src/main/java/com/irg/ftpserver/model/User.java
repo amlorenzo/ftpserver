@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.UUID;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @NoArgsConstructor  // Generates default constructor
 @AllArgsConstructor  // Generates constructor with all arguments
 @Table(name = "useraccounts", schema = "ftpserver")
+@ToString
 public class User {
 
     @Id
@@ -36,6 +38,7 @@ public class User {
     @Size(min = 5, max = 25)
     private String username;
 
+    @ToString.Exclude
     @Column(nullable = false, name = "password")
     @NotNull(message = "Password is required")
     @Size(min = 60, max = 100)

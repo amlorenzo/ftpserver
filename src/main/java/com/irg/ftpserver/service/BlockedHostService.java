@@ -74,7 +74,7 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
      * @param callingMethod the method calling this function
      * @param session       the server session
      */
-    public void recordFailedUserAttempt(String ipAddress, String reason, String callingMethod,
+    public synchronized void recordFailedUserAttempt(String ipAddress, String reason, String callingMethod,
                                         ServerSession session) {
         int attemptCount = userLookupAttempts.getOrDefault(ipAddress, 0) + 1;
         userLookupAttempts.put(ipAddress, attemptCount);
@@ -97,7 +97,7 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
      * @param callingMethod the method calling this function
      * @param session       the server session
      */
-    public void recordFailedPasswordAttempt(String ipAddress, String reason, String callingMethod,
+    public synchronized void recordFailedPasswordAttempt(String ipAddress, String reason, String callingMethod,
                                             ServerSession session) {
         int attemptCount = passwordAttempts.getOrDefault(ipAddress, 0) + 1;
         passwordAttempts.put(ipAddress, attemptCount);
@@ -120,7 +120,7 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
      * @param callingMethod the method calling this function
      * @param session       the server session
      */
-    private void blockHost(String ipAddress, String reason, String callingMethod, ServerSession session) {
+    private synchronized void blockHost(String ipAddress, String reason, String callingMethod, ServerSession session) {
         logger.warn("{} - Blocking IP Address: {} due to exceeded maximum login attempts: {}, Reason: {}",
                 callingMethod, ipAddress, maxLoginAttempts, reason);
         userLookupAttempts.remove(ipAddress);
@@ -149,7 +149,7 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
      * @param ipAddress     the IP address of the host
      * @param callingMethod the method calling this function
      */
-    public void clearAttempts(String ipAddress, String callingMethod) {
+    public synchronized void clearAttempts(String ipAddress, String callingMethod) {
         userLookupAttempts.remove(ipAddress);
         passwordAttempts.remove(ipAddress);
         logger.info("{} - Cleared attempts for host: {}", callingMethod, ipAddress);
@@ -161,7 +161,7 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
      * @param ipAddress the IP address of the host
      * @return true if the host is blocked, false otherwise
      */
-    public boolean isBlocked(String ipAddress) {
+    public synchronized boolean isBlocked(String ipAddress) {
         Optional<SFTPBlockedHost> blockedHost = sftpBlockedHostsRepository.findByIpAddress(ipAddress);
         return blockedHost.isPresent() && !blockedHost.get().isAllow();
     }
@@ -177,4 +177,8 @@ public class BlockedHostService implements ApplicationEventPublisherAware {
             logger.error("Interrupted while delaying between attempts", e);
         }
     }
+    public synchronized boolean hasAttempts(String ipAddress) {
+        return userLookupAttempts.containsKey(ipAddress) || passwordAttempts.containsKey(ipAddress);
+    }
+
 }

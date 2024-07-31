@@ -39,11 +39,11 @@ public class SFTPExecutorService {
 
     public void shutdown() {
         try{
-            logger.info("Shutting down the SFTP Executor service: {}", this.threadPoolExecutor.toString());
+            logger.info("Shutting down the SFTP Executor service: {}", this.threadPoolExecutor);
             this.threadPoolExecutor.shutdown();
             if (!this.threadPoolExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
                     logger.info("Shutting down the SFTP Executor service forcefully: {}",
-                            this.threadPoolExecutor.toString());
+                            this.threadPoolExecutor);
                 this.threadPoolExecutor.shutdownNow();
             }
         } catch (InterruptedException e) {
@@ -60,7 +60,7 @@ public class SFTPExecutorService {
 
         @NotNull
         @Override
-        public Thread newThread(Runnable r) {
+        public Thread newThread(@NotNull Runnable r) {
             Thread thread = new Thread(r);
             thread.setName(THREAD_NAME_PREFIX + threadCount.getAndIncrement());
             logger.debug("Created new thread: {}", thread.getName());

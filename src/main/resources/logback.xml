@@ -61,17 +61,35 @@
     </logger>
 
     <!-- Hibernate SQL Logger -->
-    <logger name="org.hibernate.SQL" level="info" additivity="false">
+    <logger name="org.hibernate.SQL" level="error" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
 
     <!-- Hibernate Type Logger -->
-    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="info" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
-    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="info" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="error" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Hibernate ORM Logger -->
+    <logger name="org.hibernate.orm" level="error" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Hibernate Transaction Logger -->
+    <logger name="org.hibernate.engine.transaction" level="error" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Hibernate Event Logger -->
+    <logger name="org.hibernate.event" level="error" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>

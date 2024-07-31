@@ -7,6 +7,7 @@ import com.irg.ftpserver.service.SFTPPasswordLoginService;
 import org.apache.sshd.common.PropertyResolverUtils;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.util.threads.ThreadUtils;
+import org.apache.sshd.core.CoreModuleProperties;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.AbstractGeneratorHostKeyProvider;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
@@ -42,12 +43,28 @@ public class SFTPServerConfig {
                                SFTPFileSystemService sftpFileSystemService,
                                SFTPPublicKeyLoginService sftpPublicKeyLoginService){
 
+        // Retrieving variables with latest configuration for code clarity
+        int corePoolSize = this.sftpConfigurationService.getLatestConfiguration().getCorePoolSize();
+        int maxPoolSize = this.sftpConfigurationService.getLatestConfiguration().getMaxPoolSize();
+        int keepAliveTime = this.sftpConfigurationService.getLatestConfiguration().getKeepAliveTime();
+        int queueCapacity = this.sftpConfigurationService.getLatestConfiguration().getQueueCapacity();
+        int port = this.sftpConfigurationService.getLatestConfiguration().getPort();
+        long maxIdleTime = this.sftpConfigurationService.getLatestConfiguration().getMaxIdleTime();
+        int maxWriteDataPacketLength = this.sftpConfigurationService.getLatestConfiguration()
+                .getMaxWriteDataPacketLength();
+
         SFTPExecutorService sftpExecutorService = new SFTPExecutorService(
-                this.sftpConfigurationService.getLatestConfiguration().getCorePoolSize(),
-                this.sftpConfigurationService.getLatestConfiguration().getMaxPoolSize(),
-                this.sftpConfigurationService.getLatestConfiguration().getKeepAliveTime(),
-                this.sftpConfigurationService.getLatestConfiguration().getQueueCapacity()
+                corePoolSize,
+                maxPoolSize,
+                keepAliveTime,
+                queueCapacity
         );
+        logger.info("Creating custom executor service with core pool size: {}, max pool size: {}, keep alive time: " +
+                        "{}, queue capacity: {}",
+                corePoolSize, maxPoolSize, keepAliveTime, queueCapacity);
+
+
+
 
         // Create custom executor service
          this.customExecutorService =
@@ -59,17 +76,19 @@ public class SFTPServerConfig {
 
         //Set SSH Server Properties
         SshServer sshServer = SshServer.setUpDefaultServer();
-        sshServer.setPort(sftpConfigurationService.getLatestConfiguration().getPort());
+        sshServer.setPort(port);
         sshServer.setPasswordAuthenticator(sftpPasswordLoginService);
         sshServer.setPublickeyAuthenticator(sftpPublicKeyLoginService);
         sshServer.setKeyPairProvider(createKeyPairProvider());
         sshServer.setFileSystemFactory(sftpFileSystemService);
 
-        // Set idle timeout implement later
+        // Set idle timeout property
+        sshServer.getProperties().put(CoreModuleProperties.IDLE_TIMEOUT.getName(), maxIdleTime);
+        logger.info("Setting session timeout to: {} ms", maxIdleTime);
+
 
 
         // Logging maximum write data packet length property
-        int maxWriteDataPacketLength = sftpConfigurationService.getLatestConfiguration().getMaxWriteDataPacketLength();
         PropertyResolverUtils.updateProperty(
                 sshServer,
                 SftpModuleProperties.MAX_WRITEDATA_PACKET_LENGTH.getName(),
@@ -88,9 +107,15 @@ public class SFTPServerConfig {
 
     @Bean
     public KeyPairProvider createKeyPairProvider() {
+
+        String keyPath = this.sftpConfigurationService.getLatestConfiguration().getKeyPath();
+        String hostKeyAlgorithm = this.sftpConfigurationService.getLatestConfiguration().getHostKeyAlgorithm();
+
         AbstractGeneratorHostKeyProvider hostKeyProvider =
-                new SimpleGeneratorHostKeyProvider(Paths.get(sftpConfigurationService.getLatestConfiguration().getKeyPath()));
-        hostKeyProvider.setAlgorithm(sftpConfigurationService.getLatestConfiguration().getHostKeyAlgorithm());
+                new SimpleGeneratorHostKeyProvider(Paths.get(keyPath));
+        hostKeyProvider.setAlgorithm(hostKeyAlgorithm);
+        logger.info("Host key algorithm set to: {}", hostKeyAlgorithm);
+        logger.info("Host key path set to: {}", hostKeyProvider.getPath());
         return hostKeyProvider;
     }
 }
