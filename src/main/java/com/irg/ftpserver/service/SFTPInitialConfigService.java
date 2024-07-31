@@ -39,6 +39,7 @@ public class SFTPInitialConfigService {
             sftpServerConfiguration.setKeepAliveTime(sftpServerProperties.getKeepAliveTime());
             sftpServerConfiguration.setQueueCapacity(sftpServerProperties.getQueueCapacity());
             sftpServerConfiguration.setTimeZone(sftpServerProperties.getTimeZone());
+            sftpServerConfiguration.setMaxIdleTime(sftpServerProperties.getMaxIdleTime());
             sftpServerConfiguration.setCreatedAt(new Date());
             sftpServerConfiguration.setModifiedDate(new Date());
             sftpServerConfigurationRepository.save(sftpServerConfiguration);

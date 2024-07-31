@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Table(name = "sftp_server_configuration", schema = "ftpserver")
 @Data
 @NoArgsConstructor
+@ToString
 public class SFTPServerConfiguration {
 
     @Id
@@ -87,7 +89,7 @@ public class SFTPServerConfiguration {
 
     @Column(name = "max_idle_time")
     @Min(0)
-    @Max(60000)
+    @Max(36000000)
     private long maxIdleTime;
 
     @Column(name = "created_at")

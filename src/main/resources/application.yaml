@@ -16,7 +16,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
   flyway:
     schemas: ftpserver
     table: ftpserver_schema_history
@@ -38,14 +38,14 @@ sftp:
     port: 2221
     keyPath: hostkey.ser
     # Max Packet Size do not change unless you know what you're doing.
-    maxWriteDataPacketLength: 32768
+    maxWriteDataPacketLength: 256000
     maxLoginAttemptThreshold: 3
     delayBetweenLoginAttempts: 2000
     corePoolSize: 2
     maxPoolSize: 4
     keepAliveTime: 60
     queueCapacity: 50
-    max-idle-time: 600
+    maxIdleTime: 600000
     initialPasswordChangeRequired: true
     time-zone: UTC
     SFTPUsers:
@@ -58,6 +58,7 @@ sftp:
         password-login-enabled: true
         public-keys-from-config:
           - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDyfKcD9+FVxDMmZcO+/5PzUKo1sxz300x6oPAvRaBtFhYlQk08tecEdHkae9KKwJ6TtjyrqqQwEj2A28Cn8uuiNZ6+Sk3bUng8WYvFw5KH6kRfoSEHH1M8AsapcfOriLFmCkW0bH6F1pRAhu1D9rMK3H4YUQv15j5Oap18hj7XeBZq/y7C2lgMut8B52LSQjcU53DbGqkxKoTNTHnTfVoIbwEtO8trhxJ7BmCHrdnLXgwYfRtLI4gcnGrNM8RlRgJUlqCVpOZqDgw05+YpHuuDL6iw1SE9o/LL1UtEWJkv7KVnBS7XgFd39mQSCL+062nqbeyY7cSR2y5Xf6DuMtNl testuser@localhost"
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbn0HVv2ROKljm+JlMqF9XKoSXBHH5FZ/Jt2ZP3c9kZ5LkM67wpVYFJcsakZfJxFSKJcKSD5EqyNa8M48Np2NH4QJquklN2kOoXo0Qom6WQb5e1Kjsa8rG8hU1t56+6Kcz9zLjTz7Y9vZgM3qfp9/KJ2dkKZ5kS4i8N9Hn1JcFXv5S1xQhMd8LpL1qQg3Udfg09TrR7P8vLb5CXM9zTGloCSmUJv8lX3FNlKFDhoN1CztWkC9Z6mBoEzHw3B46GKnU1pt4u9jt7/v7Tn5KXL3Fv7Q4kYwGHe3qf4O2VxJkzm/NX++lXMZpA9aYBy7n1ckqJpB8M69bF6Nd8/9oJhqg dummy@invalid"
       - username: testuser2
         password: password
         directory: /home/testuser2/ftp1
@@ -66,7 +67,8 @@ sftp:
         ticket-url: http://localhost:8080/ticket2
         password-login-enabled: true
         public-keys-from-config:
-          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDyfKcD9+FVxDMmZcO+/5PzUKo1sxz300x6oPAvRaBtFhYlQk08tecEdHkae9KKwJ6TtjyrqqQwEj2A28Cn8uuiNZ6+Sk3bUng8WYvFw5KH6kRfoSEHH1M8AsapcfOriLFmCkW0bH6F1pRAhu1D9rMK3H4YUQv15j5Oap18hj7XeBZq/y7C2lgMut8B52LSQjcU53DbGqkxKoTNTHnTfVoIbwEtO8trhxJ7BmCHrdnLXgwYfRtLI4gcnGrNM8RlRgJUlqCVpOZqDgw05+YpHuuDL6iw1SE9o/LL1UtEWJkv7KVnBS7XgFd39mQSCL+062nqbeyY7cSR2y5Xf6DuMtNl testuser@localhost"
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbn0HVv2ROKljm+JlMqF9XKoSXBHH5FZ/Jt2ZP3c9kZ5LkM67wpVYFJcsakZfJxFSKJcKSD5EqyNa8M48Np2NH4QJquklN2kOoXo0Qom6WQb5e1Kjsa8rG8hU1t56+6Kcz9zLjTz7Y9vZgM3qfp9/KJ2dkKZ5kS4i8N9Hn1JcFXv5S1xQhMd8LpL1qQg3Udfg09TrR7P8vLb5CXM9zTGloCSmUJv8lX3FNlKFDhoN1CztWkC9Z6mBoEzHw3B46GKnU1pt4u9jt7/v7Tn5KXL3Fv7Q4kYwGHe3qf4O2VxJkzm/NX++lXMZpA9aYBy7n1ckqJpB8M69bF6Nd8/9oJhqg dummy@invalid"
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDEWqX2s4bnmb0RbMl9ZkB5w9dhrJ6T1vPv6OWF3FZLz5bMcNz3HmvDQlNhUBCPh6fXh5FJYhAs8f23TKrZkLwdCvE6yf7QWQr2F5ykZy2qJ3TfO8Y0+v4Krx0Fb5x9BdxU9Q0n5CjVpHdRx7FxflVRrRQgbpUmPvMqw6UzJd5sE+TYCLMlGhsztQdf5S0SzFT8FNgUIYf23OMe98UwGbS3vXfz5fZf32y6b7dV5B6HDkgpfs3Jk3+eU5wRZkqxsDH8O5vTpZ5kClX4r+Ojl8jP3y4wSHPf3w0GQckYk62E1Nz8k+Fn6C+P9N9Kf79c89bzWqWvc1XtD3FydWzKfzXK ummy@invalid"
 
     Users:
       - username: admin
