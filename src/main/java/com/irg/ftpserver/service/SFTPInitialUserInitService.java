@@ -80,19 +80,23 @@ public class SFTPInitialUserInitService {
 
         private void createDefaultAdminUser () {
             if (userRepository.findByUsername("admin").isEmpty()) {
+                String initialUsername = sftpServerProperties.getUsers().getFirst().getUsername();
+                String initialPassword = sftpServerProperties.getUsers().getFirst().getPassword();
+                String initialEmail = sftpServerProperties.getUsers().getFirst().getEmail();
+                boolean initialPasswordChangeRequired = sftpServerProperties.isInitialPasswordChangeRequired();
                 User admin = new User();
-                admin.setUsername(sftpServerProperties.getUsers().getFirst().getUsername());
-                String password = sftpServerProperties.getUsers().getFirst().getPassword();
-                admin.setPassword(passwordEncoder.encode(password));
+                admin.setUsername(initialUsername);
+                admin.setPassword(passwordEncoder.encode(initialPassword));
+                admin.setEmail(initialEmail);
                 admin.setCreatedDate(new Date());
-                admin.setRole(Role.Admin);
+                admin.setRole(Role.ADMIN);
                 admin.setCompanyName(sftpServerProperties.getUsers().getFirst().getCompanyName());
                 admin.setModifiedDate(new Date());
+                admin.setFirstLogin(initialPasswordChangeRequired);
                 userRepository.save(admin);
-                logger.info("User {} created successfully with password: {}", admin.getUsername(), password);
+                logger.info("User {} created successfully with password: {}", admin.getUsername(), initialPassword);
                 logger.info("Verifying passwords match for user: admin: {}",
-                        passwordEncoder.matches(password, admin.getPassword()) ? "Match" : "No Match");
-
+                        passwordEncoder.matches(initialPassword, admin.getPassword()) ? "Match" : "No Match");
             } else {
                 logger.info("User Admin already exists, skipping creation.");
             }

@@ -1,5 +1,10 @@
 package com.irg.ftpserver.data;
 
 public enum Role {
-    Admin, User
+
+    ADMIN, USER;
+
+    public String asAuthority() {
+        return "ROLE_" + this.name();
+    }
 }

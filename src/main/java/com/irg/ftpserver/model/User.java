@@ -11,15 +11,17 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data  // Generates getters, setters, equals, hashCode, and toString
@@ -44,6 +46,11 @@ public class User {
     @Size(min = 60, max = 100)
     private String password;
 
+    @Column(nullable = false, unique = true, name = "email")
+    @NotNull(message = "Email is required")
+    @Email(message = "Email should be valid")
+    private String email;
+
     @Column(nullable = false, name="created_at")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull(message = "Created Date is required")
@@ -53,10 +60,11 @@ public class User {
     @NotNull(message = "Enabled is required")
     private boolean enabled;
 
+    //Assigned default value to role
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role")
     @NotNull(message = "Role is required")
-    private Role role;
+    private Role role = Role.USER;
 
     @Column(nullable = false, name = "company_name")
     @NotNull(message = "Company Identifier is required")
@@ -78,5 +86,9 @@ public class User {
     @Column(nullable = false, name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.role.asAuthority()));
+    }
 
 }

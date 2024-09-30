@@ -31,6 +31,14 @@ spring:
     clean-disabled: false
     locations: classpath:db/migration
 
+#JWT Configuration
+jwt:
+  secret:
+  expiration: 86400000
+  issuer: TrellusHealth
+  header: Authorization
+  prefix: Bearer
+
 #SFTP Server Configuration
 sftp:
   server:
@@ -73,6 +81,7 @@ sftp:
     Users:
       - username: admin
         password: c1c2b928-c0fc-486a-b183-a05a794cff52
+        email: admin@example.com
         company-name: testcompany
 
 

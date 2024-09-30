@@ -51,6 +51,11 @@ dependencies {
 	//Auth0 Java JWT dependency - Well maintained library
 	implementation 'com.auth0:java-jwt:4.2.1'
 
+	//JWT dependencies
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'      // JWT API
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'     // JWT Implementation
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'  // For JSON support (Jackson)
+
 	//Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
